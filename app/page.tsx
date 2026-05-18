@@ -1,3 +1,6 @@
+import { AppCanvas } from "./components/AppCanvas";
+import { sampleVideos } from "./data/sample-videos";
+
 export default function Home() {
-  return <main />;
+  return <AppCanvas videos={sampleVideos} />;
 }

@@ -1,25 +1,169 @@
+@import url("https://fonts.googleapis.com/css2?family=Michroma&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Saira:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #111111;
+  --foreground: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Nunito", Arial, sans-serif;
+  --font-mono: "Saira", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #ededed;
-    --foreground: #0a0a0a;
+    --background: #111111;
+    --foreground: #ffffff;
   }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+  font-family: "Nunito", Arial, sans-serif;
+  margin: 0;
+  overflow: hidden;
+}
+
+.font-control {
+  font-family: "Saira", Arial, sans-serif;
+}
+
+.font-logo {
+  font-family: "Michroma", Arial, sans-serif;
+}
+
+.toolbar-logo {
+  align-items: center;
+  background: #ca3e47;
+  border-radius: 0.5rem;
+  color: white;
+  display: grid;
+  flex-shrink: 0;
+  font-family: "Michroma", Arial, sans-serif;
+  font-size: 0.625rem;
+  font-weight: 700;
+  height: 2.25rem;
+  justify-items: center;
+  width: 2.25rem;
+}
+
+.toolbar-input {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgb(255 255 255 / 45%);
+  color: white;
+  font-family: "Saira", Arial, sans-serif;
+  font-size: 0.875rem;
+  height: 2.25rem;
+  max-width: 20rem;
+  min-width: 0;
+  outline: 0;
+  transition: border-color 150ms ease;
+  width: 100%;
+}
+
+.toolbar-input::placeholder {
+  color: rgb(255 255 255 / 60%);
+}
+
+.toolbar-input:focus {
+  border-color: #ca3e47;
+}
+
+.toolbar-pan-button {
+  appearance: none;
+  background: transparent;
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 9999px;
+  color: rgb(255 255 255 / 30%);
+  cursor: pointer;
+  display: grid;
+  font-family: "Saira", Arial, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  height: 2.25rem;
+  line-height: 1;
+  opacity: 0.45;
+  padding: 0;
+  place-items: center;
+  transform: scale(0.9);
+  transition:
+    background-color 300ms ease-out,
+    border-color 300ms ease-out,
+    color 300ms ease-out,
+    opacity 300ms ease-out,
+    transform 300ms ease-out;
+  width: 2.25rem;
+}
+
+.group:hover .toolbar-pan-button {
+  border-color: rgb(255 255 255 / 45%);
+  color: rgb(255 255 255 / 80%);
+  opacity: 1;
+  transform: scale(1);
+}
+
+.toolbar-pan-button:hover {
+  background: #ca3e47;
+  border-color: #ca3e47;
+  color: white;
+}
+
+.toolbar-button {
+  appearance: none;
+  background: transparent;
+  border: 1px solid rgb(255 255 255 / 45%);
+  border-radius: 9999px;
+  color: rgb(255 255 255 / 80%);
+  cursor: pointer;
+  font-family: "Saira", Arial, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.25;
+  padding: 0.5rem 1rem;
+  transition:
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.toolbar-button:hover {
+  border-color: #ca3e47;
+  color: white;
+}
+
+.toolbar-icon-button {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 1px solid rgb(255 255 255 / 45%);
+  border-radius: 9999px;
+  color: rgb(255 255 255 / 80%);
+  cursor: pointer;
+  display: grid;
+  height: 2.25rem;
+  justify-items: center;
+  padding: 0;
+  place-items: center;
+  transition:
+    border-color 150ms ease,
+    color 150ms ease;
+  width: 2.25rem;
+}
+
+.toolbar-icon-button:hover {
+  border-color: #ca3e47;
+  color: white;
 }
