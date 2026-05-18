@@ -1,16 +1,16 @@
-import type { PlaylistVideo } from "../data/sample-videos";
+import type { PlaylistCover } from "../data/sample-covers";
 
-type VideoCardProps = {
-  video: PlaylistVideo;
+type CoverCardProps = {
+  cover: PlaylistCover;
   index: number;
 };
 
-export function VideoCard({ video, index }: VideoCardProps) {
+export function CoverCard({ cover, index }: CoverCardProps) {
   return (
     <a
-      className="group relative block aspect-video border border-white/90 bg-transparent transition hover:border-[#CA3E47] hover:bg-[#525252]"
-      href={video.url}
-      aria-label={`open ${video.title} on youtube`}
+      aria-label={`open ${cover.title} on spotify`}
+      className="group relative block aspect-square border border-white/90 bg-transparent transition hover:border-[#1DB954] hover:bg-[#191414]"
+      href={cover.url}
       rel="noreferrer"
       target="_blank"
     >
@@ -20,7 +20,7 @@ export function VideoCard({ video, index }: VideoCardProps) {
 
       <div className="absolute inset-x-2 bottom-2 translate-y-1 opacity-0 transition group-hover:translate-y-0 group-hover:opacity-100">
         <h3 className="font-control line-clamp-2 text-[11px] font-semibold leading-4 text-white">
-          {video.title}
+          {cover.title}
         </h3>
       </div>
     </a>

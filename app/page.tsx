@@ -1,6 +1,6 @@
 import { AppCanvas } from "./components/AppCanvas";
-import { sampleVideos } from "./data/sample-videos";
+import { sampleCovers } from "./data/sample-covers";
 
 export default function Home() {
-  return <AppCanvas videos={sampleVideos} />;
+  return <AppCanvas covers={sampleCovers} />;
 }

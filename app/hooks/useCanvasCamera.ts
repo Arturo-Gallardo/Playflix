@@ -32,7 +32,7 @@ export function useCanvasCamera() {
   const [camera, setCamera] = useState<Camera>(startCamera);
 
   const panBy = useCallback((delta: Point) => {
-    // panning only moves the camera, not the video tiles.
+    // panning only moves the camera, not the cover tiles.
     setCamera((currentCamera) => ({
       ...currentCamera,
       x: currentCamera.x + delta.x,

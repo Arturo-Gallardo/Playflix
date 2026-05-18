@@ -4,6 +4,7 @@
 :root {
   --background: #111111;
   --foreground: #ffffff;
+  --spotify-green: #1db954;
 }
 
 @theme inline {
@@ -46,7 +47,7 @@ body {
 
 .toolbar-logo {
   align-items: center;
-  background: #ca3e47;
+  background: var(--spotify-green);
   border-radius: 0.5rem;
   color: white;
   display: grid;
@@ -80,7 +81,7 @@ body {
 }
 
 .toolbar-input:focus {
-  border-color: #ca3e47;
+  border-color: var(--spotify-green);
 }
 
 .toolbar-pan-button {
@@ -117,8 +118,8 @@ body {
 }
 
 .toolbar-pan-button:hover {
-  background: #ca3e47;
-  border-color: #ca3e47;
+  background: var(--spotify-green);
+  border-color: var(--spotify-green);
   color: white;
 }
 
@@ -140,7 +141,7 @@ body {
 }
 
 .toolbar-button:hover {
-  border-color: #ca3e47;
+  border-color: var(--spotify-green);
   color: white;
 }
 
@@ -164,6 +165,6 @@ body {
 }
 
 .toolbar-icon-button:hover {
-  border-color: #ca3e47;
+  border-color: var(--spotify-green);
   color: white;
 }

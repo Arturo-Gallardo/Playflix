@@ -3,12 +3,12 @@
 import type { PointerEvent, WheelEvent } from "react";
 import { useRef, useState } from "react";
 import { useCanvasCamera } from "../hooks/useCanvasCamera";
-import type { PlaylistVideo } from "../data/sample-videos";
+import type { PlaylistCover } from "../data/sample-covers";
 import { AppToolbar } from "./AppToolbar";
-import { VideoGrid } from "./VideoGrid";
+import { SongGrid } from "./SongGrid";
 
 type AppCanvasProps = {
-  videos: PlaylistVideo[];
+  covers: PlaylistCover[];
 };
 
 type DragState = {
@@ -17,14 +17,14 @@ type DragState = {
   lastY: number;
 };
 
-// toolbar controls and video links should not start a pan.
+// toolbar controls and cover links should not start a pan.
 function isInteractiveElement(target: EventTarget) {
   return (
     target instanceof Element && Boolean(target.closest("a, button, input"))
   );
 }
 
-export function AppCanvas({ videos }: AppCanvasProps) {
+export function AppCanvas({ covers }: AppCanvasProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const [dragState, setDragState] = useState<DragState | null>(null);
   const { camera, panBy, zoomAtPoint } = useCanvasCamera();
@@ -104,7 +104,7 @@ export function AppCanvas({ videos }: AppCanvasProps) {
             transform: `translate3d(${camera.x}px, ${camera.y}px, 0) scale(${camera.zoom})`,
           }}
         >
-          <VideoGrid videos={videos} />
+          <SongGrid covers={covers} />
         </div>
       </div>
     </main>

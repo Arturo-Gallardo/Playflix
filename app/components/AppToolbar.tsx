@@ -4,15 +4,15 @@ export function AppToolbar() {
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-10 grid grid-cols-[1fr_auto_1fr] items-start gap-4 p-5">
       <div className="pointer-events-auto flex min-w-0 items-center gap-3">
-        <div className="toolbar-logo">PL</div>
+        <div className="toolbar-logo">SP</div>
 
         <label className="sr-only" htmlFor="playlist-url">
-          youtube playlist link
+          spotify playlist link
         </label>
         <input
           className="toolbar-input"
           id="playlist-url"
-          placeholder="paste a youtube playlist link"
+          placeholder="paste a spotify playlist link"
           type="url"
         />
       </div>

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Playlistly",
-  description: "Look at YouTube playlists in a figma style visual grid.",
+  title: "Spotify Canvas",
+  description: "Explore Spotify playlists in a figma style cover grid.",
 };
 
 export default function RootLayout({
