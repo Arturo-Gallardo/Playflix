@@ -1,8 +1,10 @@
-export type PlaylistCover = {
+export type PlaylistCoverWire = {
   id: string;
   title: string;
   url: string;
 };
+
+export type PlaylistCover = PlaylistCoverWire;
 
 const coverTitles = [
   "midnight drive",

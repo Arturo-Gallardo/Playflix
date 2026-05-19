@@ -2,5 +2,5 @@ import { AppCanvas } from "./components/AppCanvas";
 import { sampleCovers } from "./data/sample-covers";
 
 export default function Home() {
-  return <AppCanvas covers={sampleCovers} />;
+  return <AppCanvas initialCovers={sampleCovers} />;
 }
