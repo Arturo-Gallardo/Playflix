@@ -1,20 +1,46 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { sampleCovers } from "../../data/sample-covers";
 import type { PlaylistCover } from "../../types/playlist";
+import type { PlaylistCoversPageResponse } from "../../types/spotify-playlist";
 
 export type PlaylistLoadStatus = "idle" | "loading" | "ready" | "error";
+
+type LoadPlaylistProgressivelyOptions = {
+  onBatch: (covers: PlaylistCover[]) => void;
+};
+
+async function fetchCoverPage(playlistId: string, cursor: string | null) {
+  const trimmedPlaylistId = playlistId.trim();
+  const query = cursor ? `?cursor=${encodeURIComponent(cursor)}` : "";
+  const response = await fetch(
+    `/api/playlists/${encodeURIComponent(trimmedPlaylistId)}/covers${query}`,
+    { cache: "no-store" },
+  );
+
+  const payload = (await response.json()) as PlaylistCoversPageResponse;
+
+  if (!response.ok || "error" in payload) {
+    throw new Error(
+      "error" in payload ? payload.error : "Could not load that playlist.",
+    );
+  }
+
+  return payload;
+}
 
 export function usePlaylistCovers() {
   const requestIdRef = useRef(0);
   const [status, setStatus] = useState<PlaylistLoadStatus>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  async function fetchPlaylist(playlist: string): Promise<PlaylistCover[] | null> {
-    const trimmedPlaylist = playlist.trim();
+  async function loadPlaylistProgressively(
+    playlistId: string,
+    { onBatch }: LoadPlaylistProgressivelyOptions,
+  ): Promise<number | null> {
+    const trimmedPlaylistId = playlistId.trim();
 
-    if (!trimmedPlaylist) {
+    if (!trimmedPlaylistId) {
       return null;
     }
 
@@ -23,42 +49,67 @@ export function usePlaylistCovers() {
     setStatus("loading");
     setErrorMessage(null);
 
-    // Placeholder until Spotify API is wired — returns sample covers for valid links
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    let totalTracks = 0;
+    let nextCursor: string | null = null;
 
-    if (requestIdRef.current !== requestId) {
-      return null;
-    }
+    try {
+      while (true) {
+        const payload = await fetchCoverPage(trimmedPlaylistId, nextCursor);
 
-    if (!isSpotifyPlaylistUrl(trimmedPlaylist)) {
+        if (requestIdRef.current !== requestId) {
+          return null;
+        }
+
+        if (payload.covers.length > 0) {
+          onBatch(payload.covers);
+          totalTracks += payload.covers.length;
+        }
+
+        if (!payload.hasMore || !payload.nextCursor) {
+          break;
+        }
+
+        nextCursor = payload.nextCursor;
+      }
+
+      if (requestIdRef.current !== requestId) {
+        return null;
+      }
+
+      if (totalTracks === 0) {
+        setStatus("error");
+        setErrorMessage("That playlist has no tracks to show.");
+        return null;
+      }
+
+      setStatus("ready");
+      return totalTracks;
+    } catch (error) {
+      if (requestIdRef.current !== requestId) {
+        return null;
+      }
+
+      if (totalTracks > 0) {
+        setStatus("ready");
+        setErrorMessage(
+          error instanceof Error
+            ? `${error.message} Some tracks were still added.`
+            : "Some tracks could not be loaded.",
+        );
+        return totalTracks;
+      }
+
       setStatus("error");
-      setErrorMessage("Paste a valid Spotify playlist link.");
+      setErrorMessage(
+        error instanceof Error ? error.message : "Could not load that playlist.",
+      );
       return null;
     }
-
-    const batchId = crypto.randomUUID().slice(0, 8);
-    const covers = sampleCovers.map((cover, index) => ({
-      ...cover,
-      id: `${batchId}-${index + 1}`,
-      url: trimmedPlaylist,
-    }));
-
-    setStatus("ready");
-    return covers;
   }
 
   return {
     errorMessage,
-    fetchPlaylist,
+    loadPlaylistProgressively,
     status,
   };
-}
-
-function isSpotifyPlaylistUrl(value: string) {
-  const normalized = value.toLowerCase();
-
-  return (
-    normalized.includes("open.spotify.com/playlist") ||
-    normalized.startsWith("spotify:playlist:")
-  );
 }

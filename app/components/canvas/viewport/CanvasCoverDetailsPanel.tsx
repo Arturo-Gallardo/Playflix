@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { getCoverDisplayDetails } from "../../../lib/playlist/playlist-cover";
 import type { HoveredCoverDetails } from "../CoverGrid";
 
@@ -19,12 +18,13 @@ export function CanvasCoverDetailsPanel({ details }: CanvasCoverDetailsPanelProp
 
       {details.cover.albumArtUrl ? (
         <div className="relative aspect-square w-28 shrink-0 overflow-hidden rounded bg-white/5">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             alt=""
-            className="object-cover"
-            fill
-            sizes="112px"
+            className="size-full object-cover"
+            height={112}
             src={details.cover.albumArtUrl}
+            width={112}
           />
         </div>
       ) : null}

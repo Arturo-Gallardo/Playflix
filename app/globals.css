@@ -100,6 +100,272 @@ body {
   opacity: 0.45;
 }
 
+.toolbar-playlist-trigger {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 1px solid rgb(255 255 255 / 45%);
+  border-radius: 9999px;
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: var(--font-saira), Arial, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  gap: 0.55rem;
+  height: 2.25rem;
+  max-width: 20rem;
+  min-width: 12rem;
+  padding: 0 0.85rem 0 0.75rem;
+  transition:
+    border-color 150ms ease,
+    color 150ms ease;
+  width: 100%;
+}
+
+.toolbar-playlist-trigger:hover:not(:disabled) {
+  border-color: var(--spotify-green);
+  color: white;
+}
+
+.toolbar-playlist-trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.toolbar-playlist-trigger-icon {
+  color: rgb(255 255 255 / 70%);
+  flex-shrink: 0;
+  height: 1rem;
+  width: 1rem;
+}
+
+.toolbar-playlist-trigger-label {
+  min-width: 0;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.toolbar-playlist-trigger-chevron {
+  color: rgb(255 255 255 / 55%);
+  flex-shrink: 0;
+  height: 0.9rem;
+  margin-left: auto;
+  width: 0.9rem;
+}
+
+.toolbar-playlist-panel {
+  background: rgb(17 17 17 / 96%);
+  border: 1px solid rgb(255 255 255 / 15%);
+  border-radius: 0.85rem;
+  box-shadow: 0 16px 40px rgb(0 0 0 / 45%);
+  color-scheme: dark;
+  display: flex;
+  flex-direction: column;
+  max-height: min(24rem, calc(100vh - 7rem));
+  overflow: hidden;
+  position: fixed;
+  z-index: 130;
+}
+
+.toolbar-playlist-panel-search {
+  align-items: center;
+  border-bottom: 1px solid rgb(255 255 255 / 10%);
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.55rem;
+  padding: 0.65rem 0.75rem;
+}
+
+.toolbar-playlist-panel-search-icon {
+  color: rgb(255 255 255 / 45%);
+  flex-shrink: 0;
+}
+
+.toolbar-playlist-panel-search-input {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: white;
+  font-size: 0.75rem;
+  outline: 0;
+  width: 100%;
+}
+
+.toolbar-playlist-panel-search-input::placeholder {
+  color: rgb(255 255 255 / 40%);
+}
+
+.toolbar-playlist-panel-meta {
+  color: rgb(255 255 255 / 45%);
+  flex-shrink: 0;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  min-height: 1.625rem;
+  padding: 0.55rem 0.85rem 0.35rem;
+  text-transform: uppercase;
+}
+
+.toolbar-playlist-list-scroll {
+  color-scheme: dark;
+  flex: 0 1 auto;
+  max-height: min(18.5rem, calc(100vh - 12rem));
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.25rem 0.45rem 0.55rem;
+  scrollbar-color: var(--spotify-green) rgb(255 255 255 / 10%);
+  scrollbar-width: thin;
+  touch-action: pan-y;
+}
+
+.toolbar-playlist-list-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.toolbar-playlist-list-scroll::-webkit-scrollbar-track {
+  background: rgb(255 255 255 / 8%);
+  border-radius: 9999px;
+}
+
+.toolbar-playlist-list-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--spotify-green);
+  border: 2px solid rgb(17 17 17 / 96%);
+  border-radius: 9999px;
+}
+
+.toolbar-playlist-list-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #1ed760;
+}
+
+.toolbar-playlist-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toolbar-playlist-empty {
+  color: rgb(255 255 255 / 45%);
+  font-size: 0.75rem;
+  padding: 0.85rem 0.65rem 1rem;
+  text-align: center;
+}
+
+.toolbar-playlist-loading-more {
+  color: rgb(255 255 255 / 45%);
+  font-size: 0.75rem;
+  padding: 0.45rem 0.65rem 0.55rem;
+  text-align: center;
+}
+
+.toolbar-playlist-skeleton-row {
+  display: flex;
+  gap: 0.7rem;
+  padding: 0.45rem 0.55rem;
+}
+
+.toolbar-playlist-skeleton-cover {
+  animation: toolbar-playlist-pulse 1.2s ease-in-out infinite;
+  background: rgb(255 255 255 / 8%);
+  border-radius: 0.35rem;
+  flex-shrink: 0;
+  height: 2.5rem;
+  width: 2.5rem;
+}
+
+.toolbar-playlist-skeleton-lines {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.4rem;
+  justify-content: center;
+  min-width: 0;
+}
+
+.toolbar-playlist-skeleton-line {
+  animation: toolbar-playlist-pulse 1.2s ease-in-out infinite;
+  background: rgb(255 255 255 / 8%);
+  border-radius: 9999px;
+  height: 0.55rem;
+}
+
+.toolbar-playlist-skeleton-line-long {
+  width: 72%;
+}
+
+.toolbar-playlist-skeleton-line-short {
+  width: 38%;
+}
+
+@keyframes toolbar-playlist-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.toolbar-playlist-option {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 0.65rem;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  gap: 0.7rem;
+  padding: 0.45rem 0.55rem;
+  transition: background-color 150ms ease;
+  width: 100%;
+}
+
+.toolbar-playlist-option:hover {
+  background: rgb(255 255 255 / 8%);
+}
+
+.toolbar-playlist-option-cover,
+.toolbar-playlist-option-cover-fallback {
+  border-radius: 0.35rem;
+  flex-shrink: 0;
+  height: 2.5rem;
+  object-fit: cover;
+  width: 2.5rem;
+}
+
+.toolbar-playlist-option-cover-fallback {
+  align-items: center;
+  background: rgb(255 255 255 / 8%);
+  color: rgb(255 255 255 / 55%);
+  display: grid;
+  place-items: center;
+}
+
+.toolbar-playlist-option-title {
+  color: white;
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.toolbar-playlist-option-meta {
+  color: rgb(255 255 255 / 45%);
+  display: block;
+  font-size: 0.6875rem;
+  margin-top: 0.15rem;
+}
+
 .toolbar-pan-button {
   appearance: none;
   background: transparent;
@@ -254,6 +520,98 @@ body {
 
 .toolbar-icon-button:hover {
   border-color: var(--spotify-green);
+  color: white;
+}
+
+.toolbar-avatar-button {
+  overflow: hidden;
+  padding: 0;
+}
+
+.toolbar-avatar-button:hover {
+  border-color: var(--spotify-green);
+}
+
+.toolbar-avatar-image {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.toolbar-avatar-fallback {
+  align-items: center;
+  background: rgb(29 185 84 / 20%);
+  color: var(--spotify-green);
+  display: grid;
+  height: 100%;
+  place-items: center;
+  width: 100%;
+}
+
+.toolbar-account-menu {
+  background: rgb(17 17 17 / 96%);
+  border: 1px solid rgb(255 255 255 / 15%);
+  border-radius: 0.75rem;
+  box-shadow: 0 16px 40px rgb(0 0 0 / 45%);
+  min-width: 12.5rem;
+  padding: 0.35rem;
+  position: fixed;
+  z-index: 130;
+}
+
+.toolbar-account-menu-header {
+  align-items: center;
+  border-bottom: 1px solid rgb(255 255 255 / 10%);
+  display: flex;
+  gap: 0.65rem;
+  margin-bottom: 0.35rem;
+  padding: 0.55rem 0.6rem 0.7rem;
+}
+
+.toolbar-account-menu-avatar {
+  border-radius: 9999px;
+  flex-shrink: 0;
+  height: 2rem;
+  object-fit: cover;
+  width: 2rem;
+}
+
+.toolbar-account-menu-avatar-fallback {
+  align-items: center;
+  background: rgb(29 185 84 / 20%);
+  border-radius: 9999px;
+  color: var(--spotify-green);
+  display: grid;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  height: 2rem;
+  place-items: center;
+  width: 2rem;
+}
+
+.toolbar-account-menu-item {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: 0.5rem;
+  color: rgb(255 255 255 / 88%);
+  cursor: pointer;
+  display: flex;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  gap: 0.55rem;
+  letter-spacing: 0.08em;
+  padding: 0.55rem 0.65rem;
+  text-transform: uppercase;
+  transition: background-color 150ms ease, color 150ms ease;
+  width: 100%;
+}
+
+.toolbar-account-menu-item:hover {
+  background: rgb(255 255 255 / 8%);
   color: white;
 }
 
@@ -629,6 +987,38 @@ body {
 
 .welcome-overlay-panel {
   box-shadow: 0 16px 40px rgb(0 0 0 / 45%);
+}
+
+.spotify-sign-in-button {
+  align-items: center;
+  background: var(--spotify-green);
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 9999px;
+  color: white;
+  display: inline-flex;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  gap: 0.5rem;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.65rem 1.25rem;
+  transition: transform 160ms ease, opacity 160ms ease;
+  width: 100%;
+}
+
+.spotify-sign-in-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.spotify-sign-in-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.spotify-sign-in-button-compact {
+  min-height: 2.25rem;
+  padding: 0.5rem 1rem;
+  width: auto;
 }
 
 .welcome-tip-list {

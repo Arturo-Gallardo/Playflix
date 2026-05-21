@@ -62,7 +62,7 @@ export function CoverGrid({
             "absolute",
             isTileEnterActive && "canvas-tile-enter",
           )}
-          key={tile.id}
+          key={`${tile.index}:${tile.id}`}
           style={{
             animationDelay: isTileEnterActive
               ? `${Math.min(tile.index, 48) * 16}ms`

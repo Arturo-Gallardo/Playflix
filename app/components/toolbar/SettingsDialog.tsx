@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useState } from "react";
 import { createPortal } from "react-dom";
+import type { SpotifyUserProfile } from "../../types/spotify-auth";
 import { LegalPageLinks } from "../shared/LegalPageLinks";
 import { cn } from "../../lib/cn";
 
@@ -13,6 +14,8 @@ type SettingsDialogProps = {
   onClose: () => void;
   onCoverDetailsHiddenChange: (hidden: boolean) => void;
   onShortcutLegendVisibleChange: (visible: boolean) => void;
+  onSignOut: () => void;
+  user: SpotifyUserProfile | null;
 };
 
 export function SettingsDialog({
@@ -23,6 +26,8 @@ export function SettingsDialog({
   onClose,
   onCoverDetailsHiddenChange,
   onShortcutLegendVisibleChange,
+  onSignOut,
+  user,
 }: SettingsDialogProps) {
   const dialogTitleId = useId();
   const [isMounted, setIsMounted] = useState(false);
@@ -74,6 +79,43 @@ export function SettingsDialog({
               display and local storage for this browser.
             </p>
           </header>
+
+          {user ? (
+            <section className="space-y-3">
+              <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
+                account
+              </h3>
+              <div className="flex items-center gap-3 rounded-md border border-white/10 bg-white/[0.03] px-3 py-2.5">
+                {user.imageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    alt=""
+                    className="size-9 rounded-full object-cover"
+                    height={36}
+                    src={user.imageUrl}
+                    width={36}
+                  />
+                ) : (
+                  <div className="grid size-9 place-items-center rounded-full bg-[#1DB954]/20 text-xs font-semibold text-[#1DB954]">
+                    {user.displayName.slice(0, 1).toUpperCase()}
+                  </div>
+                )}
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-white">
+                    {user.displayName}
+                  </p>
+                  <p className="text-[10px] text-white/45">Connected to Spotify</p>
+                </div>
+                <button
+                  className="toolbar-button shrink-0 px-3 py-1.5 text-[10px]"
+                  onClick={onSignOut}
+                  type="button"
+                >
+                  sign out
+                </button>
+              </div>
+            </section>
+          ) : null}
 
           <section className="space-y-3">
             <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">

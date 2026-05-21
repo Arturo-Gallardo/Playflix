@@ -6,8 +6,8 @@ import { useCanvasPersistence } from "./useCanvasPersistence";
 import { useCanvasTiles } from "./useCanvasTiles";
 import { useCanvasTileEnter } from "./useCanvasTileEnter";
 import { usePlaylistCovers } from "../playlist/usePlaylistCovers";
-import type { PlaylistCover } from "../../types/playlist";
 import { playlistSourcesInclude } from "../../lib/playlist/playlist-source";
+import type { SpotifyPlaylistSelection } from "../../types/spotify-playlist";
 import { clearAllPlaylistCoverCache } from "../../lib/playlist/playlist-cache";
 import { clearCanvasSnapshot } from "../../lib/canvas/canvas-storage";
 import {
@@ -35,10 +35,10 @@ import {
   sortTilesByDate,
   type TileOrderCriterion,
 } from "../../lib/canvas/tile-ordering";
+import { getGridCanvasBounds } from "../../lib/canvas/canvas-layout";
 
-export function useAppCanvas(initialCovers: PlaylistCover[] = []) {
+export function useAppCanvas() {
   const { loadNotification, showNotification } = useCanvasNotifications();
-  const didSeedInitialCoversRef = useRef(false);
 
   const [playlistSources, setPlaylistSources] = useState<string[]>([]);
   const playlistSourcesRef = useRef(playlistSources);
@@ -82,7 +82,7 @@ export function useAppCanvas(initialCovers: PlaylistCover[] = []) {
     zoomAtPoint,
   } = useCanvasCamera();
 
-  const { errorMessage, fetchPlaylist, status: playlistStatus } =
+  const { errorMessage, loadPlaylistProgressively, status: playlistStatus } =
     usePlaylistCovers();
 
   const discardClearHistoryRef = useRef<() => void>(() => {});
@@ -157,7 +157,6 @@ export function useAppCanvas(initialCovers: PlaylistCover[] = []) {
     canUndoClear,
     clearCanvas,
     discardClearHistory,
-    hasFinishedInitialRestore,
     importCanvasLayout,
     redoClear,
     saveCanvasNow,
@@ -173,7 +172,6 @@ export function useAppCanvas(initialCovers: PlaylistCover[] = []) {
     onCanvasClear: () => {
       setSelectedTileIds(new Set());
       didCenterInitialTilesRef.current = false;
-      didSeedInitialCoversRef.current = false;
       pendingCenterRectRef.current = null;
       setCenterPlaylistRequest((currentRequest) => currentRequest + 1);
       showNotification("layout cleared");
@@ -459,36 +457,6 @@ export function useAppCanvas(initialCovers: PlaylistCover[] = []) {
   });
 
   useEffect(() => {
-    if (!hasFinishedInitialRestore || didSeedInitialCoversRef.current) {
-      return;
-    }
-
-    if (tiles.length > 0) {
-      didSeedInitialCoversRef.current = true;
-      return;
-    }
-
-    if (initialCovers.length === 0) {
-      return;
-    }
-
-    didSeedInitialCoversRef.current = true;
-
-    const batchBounds = appendPlaylistTiles(initialCovers, "seed");
-    syncPlaylistSources(["sample"]);
-    pendingCenterRectRef.current = batchBounds;
-    setCenterPlaylistRequest((currentRequest) => currentRequest + 1);
-    saveCanvasSilently();
-  }, [
-    appendPlaylistTiles,
-    hasFinishedInitialRestore,
-    initialCovers,
-    saveCanvasSilently,
-    syncPlaylistSources,
-    tiles.length,
-  ]);
-
-  useEffect(() => {
     if (tiles.length === 0 && playlistSources.length > 0) {
       syncPlaylistSources([]);
     }
@@ -602,37 +570,53 @@ export function useAppCanvas(initialCovers: PlaylistCover[] = []) {
     ],
   );
 
-  async function handlePlaylistLoad(playlist: string) {
+  async function handlePlaylistLoad(playlist: SpotifyPlaylistSelection) {
     setIsSlowPlaylistLoad(false);
-    const trimmedPlaylist = playlist.trim();
 
-    if (playlistSourcesInclude(playlistSourcesRef.current, trimmedPlaylist)) {
+    if (playlistSourcesInclude(playlistSourcesRef.current, playlist.url)) {
       showNotification("playlist already on canvas");
       return;
     }
 
-    const fetchedCovers = await fetchPlaylist(trimmedPlaylist);
+    discardClearHistory();
+    beginTileDragCheckpoint();
 
-    if (!fetchedCovers || fetchedCovers.length === 0) {
+    const batchId = crypto.randomUUID().slice(0, 8);
+    let playlistBounds = getGridCanvasBounds(0);
+
+    const totalTracks = await loadPlaylistProgressively(playlist.id, {
+      onBatch: (covers) => {
+        playlistBounds = appendPlaylistTiles(covers, batchId, {
+          continueGrid: true,
+          expectedTotal: playlist.trackCount,
+        });
+      },
+    });
+
+    if (!totalTracks) {
+      revertTileDragCheckpoint();
       return;
     }
 
-    discardClearHistory();
+    pendingCenterRectRef.current = playlistBounds;
+    setCenterPlaylistRequest((currentRequest) => currentRequest + 1);
 
-    beginTileDragCheckpoint();
-    const batchId = crypto.randomUUID().slice(0, 8);
-    const batchBounds = appendPlaylistTiles(fetchedCovers, batchId);
-
-    syncPlaylistSources((currentSources) => [...currentSources, trimmedPlaylist]);
+    syncPlaylistSources((currentSources) => [...currentSources, playlist.url]);
     commitTileDragCheckpoint();
     saveCanvasSilently();
 
     setSelectedTileIds(new Set());
-    pendingCenterRectRef.current = batchBounds;
-    setCenterPlaylistRequest((currentRequest) => currentRequest + 1);
 
-    const coverLabel = fetchedCovers.length === 1 ? "track" : "tracks";
-    showNotification(`${fetchedCovers.length} ${coverLabel} added`);
+    const coverLabel = totalTracks === 1 ? "track" : "tracks";
+
+    if (playlist.trackCount > totalTracks) {
+      showNotification(
+        `${totalTracks} of ${playlist.trackCount} ${coverLabel} loaded`,
+      );
+      return;
+    }
+
+    showNotification(`${totalTracks} ${coverLabel} added`);
   }
 
   return {

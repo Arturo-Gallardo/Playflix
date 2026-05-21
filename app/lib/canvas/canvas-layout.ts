@@ -47,6 +47,26 @@ export function createBatchTileId(batchId: string, coverId: string) {
   return `${batchId}:${coverId}`;
 }
 
+export function resolveRestoredTileId(
+  occupiedTileIds: ReadonlySet<string>,
+  preferredId: string,
+  entryIndex: number,
+) {
+  if (!occupiedTileIds.has(preferredId)) {
+    return preferredId;
+  }
+
+  let suffix = 1;
+  let candidate = `${preferredId}~${entryIndex}`;
+
+  while (occupiedTileIds.has(candidate)) {
+    suffix += 1;
+    candidate = `${preferredId}~${entryIndex}~${suffix}`;
+  }
+
+  return candidate;
+}
+
 export function resolvePastedTileId(
   occupiedTileIds: ReadonlySet<string>,
   batchId: string,
@@ -85,7 +105,7 @@ export function resolvePastedTileId(
 
 export function createCanvasTilesWithIds(
   covers: PlaylistCover[],
-  getTileId: (cover: PlaylistCover) => string,
+  getTileId: (cover: PlaylistCover, index: number) => string,
   origin: Point,
 ) {
   const columnCount = getBalancedColumnCount(covers.length);
@@ -96,7 +116,32 @@ export function createCanvasTilesWithIds(
     const row = Math.floor(index / columnCount);
 
     return {
-      id: getTileId(cover),
+      id: getTileId(cover, index),
+      cover,
+      x: origin.x + column * cellStride.width,
+      y: origin.y + row * cellStride.height,
+      width: canvasTileConfig.width,
+      height: canvasTileConfig.height,
+    } satisfies CanvasTile;
+  });
+}
+
+export function createCanvasTilesContinuingGrid(
+  covers: PlaylistCover[],
+  getTileId: (cover: PlaylistCover, index: number) => string,
+  startIndex: number,
+  columnCount: number,
+  origin: Point,
+) {
+  const cellStride = getCanvasCellStride();
+
+  return covers.map((cover, index) => {
+    const globalIndex = startIndex + index;
+    const column = globalIndex % columnCount;
+    const row = Math.floor(globalIndex / columnCount);
+
+    return {
+      id: getTileId(cover, index),
       cover,
       x: origin.x + column * cellStride.width,
       y: origin.y + row * cellStride.height,
@@ -456,8 +501,14 @@ export function buildGrabOffsets(
 }
 
 export function getBalancedColumnCount(coverCount: number) {
-  // balance the number of tiles per side so playlists do not stack vertically
-  return Math.max(1, Math.ceil(Math.sqrt(coverCount)));
+  if (coverCount <= 1) {
+    return 1;
+  }
+
+  // Aim for a landscape grid (~3:2) instead of a square block.
+  const wideAspectRatio = 1.5;
+
+  return Math.max(1, Math.ceil(Math.sqrt(coverCount * wideAspectRatio)));
 }
 
 export function normalizeRect(start: Point, current: Point): Rect {

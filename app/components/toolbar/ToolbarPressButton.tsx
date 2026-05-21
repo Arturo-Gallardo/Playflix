@@ -1,5 +1,6 @@
 "use client";
 
+import { forwardRef } from "react";
 import { useToolbarPressFeedback } from "../../hooks/toolbar/useToolbarPressFeedback";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "../../lib/cn";
@@ -10,18 +11,31 @@ type ToolbarPressButtonProps = {
   variant: "pill" | "icon";
 } & Pick<
   ButtonHTMLAttributes<HTMLButtonElement>,
-  "aria-label" | "aria-pressed" | "disabled" | "onClick" | "type"
+  | "aria-controls"
+  | "aria-expanded"
+  | "aria-haspopup"
+  | "aria-label"
+  | "aria-pressed"
+  | "disabled"
+  | "onClick"
+  | "type"
 >;
 
-export function ToolbarPressButton({
-  children,
-  className,
-  disabled,
-  onClick,
-  type = "button",
-  variant,
-  ...rest
-}: ToolbarPressButtonProps) {
+export const ToolbarPressButton = forwardRef<
+  HTMLButtonElement,
+  ToolbarPressButtonProps
+>(function ToolbarPressButton(
+  {
+    children,
+    className,
+    disabled,
+    onClick,
+    type = "button",
+    variant,
+    ...rest
+  },
+  ref,
+) {
   const {
     isHeld,
     isReleasing,
@@ -48,10 +62,11 @@ export function ToolbarPressButton({
       onPointerCancel={handlePointerCancel}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
+      ref={ref}
       type={type}
       {...rest}
     >
       {children}
     </button>
   );
-}
+});

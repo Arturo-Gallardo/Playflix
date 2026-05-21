@@ -7,7 +7,7 @@ export type OnboardingHintPlacement = {
   anchorY: number;
 };
 
-const playlistInputSelector = '[data-onboarding-target="playlist-input"]';
+const playlistPickerSelector = '[data-onboarding-target="playlist-picker"]';
 const toolbarSelector = "header";
 const anchorGapPx = 14;
 
@@ -46,7 +46,7 @@ export function useOnboardingHintPlacements(isEnabled: boolean) {
     }
 
     function updatePlacements() {
-      setPlaylistInput(measureTarget(playlistInputSelector));
+      setPlaylistInput(measureTarget(playlistPickerSelector));
     }
 
     function scheduleMeasure() {
@@ -59,7 +59,7 @@ export function useOnboardingHintPlacements(isEnabled: boolean) {
 
     const observedElements = [
       document.querySelector(toolbarSelector),
-      document.querySelector(playlistInputSelector),
+      document.querySelector(playlistPickerSelector),
     ].filter((element): element is Element => element !== null);
 
     const resizeObserver = new ResizeObserver(scheduleMeasure);

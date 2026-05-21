@@ -11,7 +11,10 @@ import {
 import type { PlaylistLoadStatus } from "../../hooks/playlist/usePlaylistCovers";
 import { CanvasZoomControls } from "../canvas/CanvasZoomControls";
 import type { CanvasTile } from "../../lib/canvas/canvas-layout";
-import { PlaylistInput } from "./PlaylistInput";
+import type { SpotifyUserProfile } from "../../types/spotify-auth";
+import type { SpotifyPlaylistSelection } from "../../types/spotify-playlist";
+import { PlaylistPicker } from "./PlaylistPicker";
+import { ToolbarAccountMenu } from "./ToolbarAccountMenu";
 import { ToolbarCoverSearch } from "./ToolbarCoverSearch";
 import { ToolbarPanButton } from "./ToolbarPanButton";
 import { ToolbarPressButton } from "./ToolbarPressButton";
@@ -28,6 +31,7 @@ type AppToolbarProps = {
   canZoomOut: boolean;
   errorMessage: string | null;
   hasTilesOnCanvas: boolean;
+  isAuthenticated: boolean;
   onCanvasClear: () => void;
   onCanvasExport: () => void;
   onCanvasImport: (file: File) => Promise<void>;
@@ -36,12 +40,15 @@ type AppToolbarProps = {
   onCanvasUndo: () => void;
   onFitAllTiles: () => void;
   onFocusCoverTile: (tileId: string) => void;
-  onPlaylistLoad: (playlist: string) => Promise<void>;
+  onPlaylistLoad: (playlist: SpotifyPlaylistSelection) => Promise<void>;
   onSettingsOpen: () => void;
+  onSignIn: () => void;
+  onSignOut: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   playlistStatus: PlaylistLoadStatus;
   tiles: CanvasTile[];
+  user: SpotifyUserProfile | null;
 };
 
 export function AppToolbar({
@@ -53,6 +60,7 @@ export function AppToolbar({
   canZoomOut,
   errorMessage,
   hasTilesOnCanvas,
+  isAuthenticated,
   onCanvasClear,
   onCanvasExport,
   onCanvasImport,
@@ -63,14 +71,18 @@ export function AppToolbar({
   onFocusCoverTile,
   onPlaylistLoad,
   onSettingsOpen,
+  onSignIn,
+  onSignOut,
   onZoomIn,
   onZoomOut,
   playlistStatus,
   tiles,
+  user,
 }: AppToolbarProps) {
   return (
     <header className="canvas-toolbar-enter pointer-events-none absolute inset-x-0 top-0 z-10 grid grid-cols-[1fr_auto_1fr] items-start gap-4 overflow-visible p-5">
-      <PlaylistInput
+      <PlaylistPicker
+        disabled={!isAuthenticated}
         errorMessage={errorMessage}
         hasTilesOnCanvas={hasTilesOnCanvas}
         onCanvasExport={onCanvasExport}
@@ -88,7 +100,7 @@ export function AppToolbar({
           <ToolbarPanButton
             ariaLabel="save canvas layout"
             className="disabled:cursor-not-allowed disabled:opacity-35"
-            disabled={!canSave}
+            disabled={!canSave || !isAuthenticated}
             onClick={onCanvasSave}
           >
             <Save
@@ -101,6 +113,7 @@ export function AppToolbar({
         <ToolbarTooltipWrap hint="Ctrl+K" label="Clear layout">
           <ToolbarPanButton
             ariaLabel="clear saved canvas layout"
+            disabled={!isAuthenticated}
             onClick={onCanvasClear}
           >
             <Trash2
@@ -113,7 +126,7 @@ export function AppToolbar({
         <ToolbarTooltipWrap hint="Ctrl+Z" label="Undo">
           <ToolbarPanButton
             ariaLabel="undo tile move"
-            disabled={!canUndo}
+            disabled={!canUndo || !isAuthenticated}
             onClick={onCanvasUndo}
           >
             <Undo2
@@ -126,7 +139,7 @@ export function AppToolbar({
         <ToolbarTooltipWrap hint="Ctrl+Y" label="Redo">
           <ToolbarPanButton
             ariaLabel="redo tile move"
-            disabled={!canRedo}
+            disabled={!canRedo || !isAuthenticated}
             onClick={onCanvasRedo}
           >
             <Redo2
@@ -141,30 +154,39 @@ export function AppToolbar({
 
       <div className="group pointer-events-auto -m-3 flex min-w-0 items-center justify-end gap-2 p-3">
         <ToolbarCoverSearch
-          disabled={!hasTilesOnCanvas}
+          disabled={!hasTilesOnCanvas || !isAuthenticated}
           onFocusTile={onFocusCoverTile}
           tiles={tiles}
         />
         <CanvasZoomControls
-          canFitAll={canFitAllTiles}
-          canZoomIn={canZoomIn}
-          canZoomOut={canZoomOut}
+          canFitAll={canFitAllTiles && isAuthenticated}
+          canZoomIn={canZoomIn && isAuthenticated}
+          canZoomOut={canZoomOut && isAuthenticated}
           onFitAll={onFitAllTiles}
           onZoomIn={onZoomIn}
           onZoomOut={onZoomOut}
         />
-        <ToolbarTooltipWrap label="Log in">
-          <ToolbarPressButton aria-label="log in" variant="icon">
-            <User
-              aria-hidden="true"
-              className={toolbarIconClassName}
-              strokeWidth={1.8}
-            />
-          </ToolbarPressButton>
-        </ToolbarTooltipWrap>
+        {isAuthenticated && user ? (
+          <ToolbarAccountMenu onSignOut={onSignOut} user={user} />
+        ) : (
+          <ToolbarTooltipWrap label="Sign in with Spotify">
+            <ToolbarPressButton
+              aria-label="sign in with spotify"
+              onClick={onSignIn}
+              variant="icon"
+            >
+              <User
+                aria-hidden="true"
+                className={toolbarIconClassName}
+                strokeWidth={1.8}
+              />
+            </ToolbarPressButton>
+          </ToolbarTooltipWrap>
+        )}
         <ToolbarTooltipWrap label="Settings">
           <ToolbarPressButton
             aria-label="open settings"
+            disabled={!isAuthenticated}
             onClick={onSettingsOpen}
             variant="icon"
           >

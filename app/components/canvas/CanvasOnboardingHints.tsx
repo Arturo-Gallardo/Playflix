@@ -29,7 +29,7 @@ export function CanvasOnboardingHints({ isVisible }: CanvasOnboardingHintsProps)
       {placements.playlistInput ? (
         <OnboardingHint
           bend="left"
-          label="paste a spotify playlist link, then hit the search button"
+          label="open your playlists and pick one to load"
           placement={placements.playlistInput}
         />
       ) : null}

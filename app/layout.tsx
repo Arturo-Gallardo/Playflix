@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SpotifyDevHostRedirect } from "./components/auth/SpotifyDevHostRedirect";
 import { michroma, nunito, saira } from "./fonts";
 import "./globals.css";
 
@@ -17,7 +18,10 @@ export default function RootLayout({
       className={`${nunito.variable} ${saira.variable} ${michroma.variable}`}
       lang="en"
     >
-      <body>{children}</body>
+      <body>
+        <SpotifyDevHostRedirect />
+        {children}
+      </body>
     </html>
   );
 }

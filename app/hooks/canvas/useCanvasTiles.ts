@@ -3,9 +3,10 @@
 import { useCallback, useRef, useState } from "react";
 import {
   canvasTileConfig,
-  createBatchTileId,
+  createCanvasTilesContinuingGrid,
   createCanvasTilesWithIds,
   resolvePastedTileId,
+  resolveRestoredTileId,
   expandRectBounds,
   getAppendOrigin,
   getBalancedColumnCount,
@@ -28,6 +29,11 @@ import type {
 import type { PlaylistCover } from "../../types/playlist";
 
 const maxTileHistoryEntries = 50;
+
+type AppendPlaylistTilesOptions = {
+  continueGrid?: boolean;
+  expectedTotal?: number;
+};
 
 type TileState = {
   bounds: Rect;
@@ -67,21 +73,38 @@ function buildTileStateFromSnapshot(
   entries: CanvasCoverWire[],
   layout: Pick<CanvasSnapshotWire, "tiles" | "movedTileIds">,
 ): TileState {
-  const coverByTileId = new Map(
-    entries.map((entry) => [entry.tileId, hydrateCanvasCover(entry)]),
-  );
   const tiles: CanvasTile[] = [];
+  const occupiedTileIds = new Set<string>();
+  const claimedMovedSourceIds = new Set<string>();
+  const movedTileIds = new Set<string>();
 
-  for (const tileLayout of layout.tiles) {
-    const cover = coverByTileId.get(tileLayout.id);
+  for (let index = 0; index < layout.tiles.length; index += 1) {
+    const tileLayout = layout.tiles[index];
+    const coverWire =
+      entries.find((entry) => entry.tileId === tileLayout.id) ?? entries[index];
 
-    if (!cover) {
+    if (!coverWire) {
       continue;
     }
 
+    const tileId = resolveRestoredTileId(
+      occupiedTileIds,
+      tileLayout.id,
+      index,
+    );
+    occupiedTileIds.add(tileId);
+
+    if (
+      layout.movedTileIds.includes(tileLayout.id) &&
+      !claimedMovedSourceIds.has(tileLayout.id)
+    ) {
+      movedTileIds.add(tileId);
+      claimedMovedSourceIds.add(tileLayout.id);
+    }
+
     tiles.push({
-      id: tileLayout.id,
-      cover,
+      id: tileId,
+      cover: hydrateCanvasCover(coverWire),
       x: tileLayout.x,
       y: tileLayout.y,
       width: canvasTileConfig.width,
@@ -92,7 +115,7 @@ function buildTileStateFromSnapshot(
   return {
     bounds: getRectBounds(tiles),
     columnCount: getBalancedColumnCount(tiles.length),
-    movedTileIds: new Set(layout.movedTileIds),
+    movedTileIds,
     tileIndexById: buildTileIndexById(tiles),
     tiles,
     tileIdsKey: buildTileIdsKey(tiles),
@@ -187,37 +210,81 @@ export function useCanvasTiles({
   );
 
   const appendPlaylistTiles = useCallback(
-    (covers: PlaylistCover[], batchId: string): Rect => {
+    (
+      covers: PlaylistCover[],
+      batchId: string,
+      options?: AppendPlaylistTilesOptions,
+    ): Rect => {
       if (covers.length === 0) {
         return getGridCanvasBounds(0);
       }
 
-      const localBatchBounds = getRectBounds(
-        createCanvasTilesWithIds(
-          covers,
-          (cover) => createBatchTileId(batchId, cover.id),
-          { x: 0, y: 0 },
-        ),
-      );
-
-      let nextBatchBounds = localBatchBounds;
+      let nextBounds = getGridCanvasBounds(0);
 
       setTileStateWithRef((currentState) => {
-        const origin =
-          currentState.tiles.length === 0
-            ? { x: 0, y: 0 }
-            : getAppendOrigin(currentState.bounds, localBatchBounds);
-        const nextBatchTiles = createCanvasTilesWithIds(
-          covers,
-          (cover) => createBatchTileId(batchId, cover.id),
-          origin,
+        const occupiedTileIds = new Set(
+          currentState.tiles.map((tile) => tile.id),
         );
-        nextBatchBounds = getRectBounds(nextBatchTiles);
+        const batchTileIds = covers.map((cover, entryIndex) => {
+          const tileId = resolvePastedTileId(
+            occupiedTileIds,
+            batchId,
+            cover.id,
+            entryIndex,
+          );
+          occupiedTileIds.add(tileId);
+          return tileId;
+        });
+
+        const continueGrid = options?.continueGrid === true;
+        const expectedTotal = options?.expectedTotal ?? 0;
+        const startIndex = currentState.tiles.length;
+        const columnCount =
+          continueGrid && expectedTotal > 0
+            ? getBalancedColumnCount(expectedTotal)
+            : continueGrid && startIndex > 0
+              ? currentState.columnCount
+              : getBalancedColumnCount(startIndex + covers.length);
+
+        let nextBatchTiles: CanvasTile[];
+
+        if (continueGrid) {
+          nextBatchTiles = createCanvasTilesContinuingGrid(
+            covers,
+            (_cover, index) => batchTileIds[index],
+            startIndex,
+            columnCount,
+            { x: 0, y: 0 },
+          );
+        } else {
+          const localBatchBounds = getRectBounds(
+            createCanvasTilesWithIds(
+              covers,
+              (_cover, index) => batchTileIds[index],
+              { x: 0, y: 0 },
+            ),
+          );
+
+          const origin =
+            currentState.tiles.length === 0
+              ? { x: 0, y: 0 }
+              : getAppendOrigin(currentState.bounds, localBatchBounds);
+
+          nextBatchTiles = createCanvasTilesWithIds(
+            covers,
+            (_cover, index) => batchTileIds[index],
+            origin,
+          );
+        }
+
         const nextTiles = [...currentState.tiles, ...nextBatchTiles];
+        nextBounds = getRectBounds(nextTiles);
 
         return {
-          bounds: getRectBounds(nextTiles),
-          columnCount: getBalancedColumnCount(nextTiles.length),
+          bounds: nextBounds,
+          columnCount: continueGrid
+            ? columnCount
+            : getBalancedColumnCount(nextTiles.length),
           movedTileIds: currentState.movedTileIds,
           tileIndexById: buildTileIndexById(nextTiles),
           tiles: nextTiles,
@@ -225,7 +292,7 @@ export function useCanvasTiles({
         };
       });
 
-      return nextBatchBounds;
+      return nextBounds;
     },
     [setTileStateWithRef],
   );
