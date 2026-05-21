@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { michroma, nunito, saira } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Spotify Canvas",
-  description: "Explore Spotify playlists in a figma style cover grid.",
+  title: "Playlix",
+  description: "Explore Spotify playlists on an infinite cover canvas.",
 };
 
 export default function RootLayout({
@@ -12,7 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html
+      className={`${nunito.variable} ${saira.variable} ${michroma.variable}`}
+      lang="en"
+    >
       <body>{children}</body>
     </html>
   );

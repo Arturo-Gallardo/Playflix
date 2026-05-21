@@ -1,4 +1,4 @@
-import type { PlaylistCoverWire } from "../data/sample-covers";
+import type { PlaylistCoverWire } from "./playlist";
 
 export type CanvasCameraWire = {
   x: number;
@@ -14,6 +14,16 @@ export type CanvasTileLayoutWire = {
 
 export type CanvasCoverWire = PlaylistCoverWire & {
   tileId: string;
+};
+
+export type CanvasSnapshotWireV1 = {
+  version: 1;
+  savedAt: number;
+  covers: PlaylistCoverWire[];
+  tiles: CanvasTileLayoutWire[];
+  movedTileIds: string[];
+  camera: CanvasCameraWire;
+  playlistSource: string | null;
 };
 
 export type CanvasSnapshotWire = {
