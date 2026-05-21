@@ -1,7 +1,7 @@
 import { canvasTileConfig } from "./canvas-layout";
 import { hydratePlaylistCover, toPlaylistCoverWire } from "../playlist/playlist-cover";
 import type { CanvasTile, Point } from "./canvas-layout";
-import type { PlaylistCover, PlaylistCoverWire } from "../../types/playlist";
+import type { PlaylistCoverWire } from "../../types/playlist";
 
 export const tileClipboardMarker = "playlix-tile-clipboard-v1";
 

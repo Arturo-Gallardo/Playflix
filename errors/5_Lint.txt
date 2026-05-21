@@ -1,0 +1,448 @@
+﻿2026-05-21T04:11:37.0402936Z ##[group]Run npm run lint
+2026-05-21T04:11:37.0403233Z [36;1mnpm run lint[0m
+2026-05-21T04:11:37.0438354Z shell: /usr/bin/bash -e {0}
+2026-05-21T04:11:37.0438619Z ##[endgroup]
+2026-05-21T04:11:37.1577503Z 
+2026-05-21T04:11:37.1578184Z > playlix@0.1.0 lint
+2026-05-21T04:11:37.1578628Z > eslint
+2026-05-21T04:11:37.1579057Z 
+2026-05-21T04:11:42.3207303Z 
+2026-05-21T04:11:42.3209909Z /home/runner/work/Playlix/Playlix/app/components/canvas/CanvasContextMenu.tsx
+2026-05-21T04:11:42.3219490Z   57:3  error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3220194Z 
+2026-05-21T04:11:42.3223294Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3225214Z 
+2026-05-21T04:11:42.3225876Z /home/runner/work/Playlix/Playlix/app/components/canvas/CanvasContextMenu.tsx:57:3
+2026-05-21T04:11:42.3226706Z   55 |   });
+2026-05-21T04:11:42.3227054Z   56 |
+2026-05-21T04:11:42.3227480Z > 57 |   onCloseRef.current = onClose;
+2026-05-21T04:11:42.3228050Z      |   ^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+2026-05-21T04:11:42.3228542Z   58 |
+2026-05-21T04:11:42.3228845Z   59 |   useEffect(() => {
+2026-05-21T04:11:42.3231614Z   60 |     setIsMounted(true);                                                                                                                                                                                                                                                                                                                                                                             react-hooks/refs
+2026-05-21T04:11:42.3233710Z   60:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+2026-05-21T04:11:42.3235429Z 
+2026-05-21T04:11:42.3237268Z Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+2026-05-21T04:11:42.3239177Z * Update external systems with the latest state from React.
+2026-05-21T04:11:42.3240721Z * Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+2026-05-21T04:11:42.3241565Z 
+2026-05-21T04:11:42.3243040Z Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+2026-05-21T04:11:42.3244252Z 
+2026-05-21T04:11:42.3244888Z /home/runner/work/Playlix/Playlix/app/components/canvas/CanvasContextMenu.tsx:60:5
+2026-05-21T04:11:42.3245650Z   58 |
+2026-05-21T04:11:42.3246432Z   59 |   useEffect(() => {
+2026-05-21T04:11:42.3246893Z > 60 |     setIsMounted(true);
+2026-05-21T04:11:42.3247480Z      |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+2026-05-21T04:11:42.3248048Z   61 |   }, []);
+2026-05-21T04:11:42.3248365Z   62 |
+2026-05-21T04:11:42.3248884Z   63 |   useLayoutEffect(() => {  react-hooks/set-state-in-effect
+2026-05-21T04:11:42.3249324Z 
+2026-05-21T04:11:42.3250163Z /home/runner/work/Playlix/Playlix/app/components/canvas/CanvasOnboardingHints.tsx
+2026-05-21T04:11:42.3251514Z   20:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+2026-05-21T04:11:42.3252183Z 
+2026-05-21T04:11:42.3253944Z Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+2026-05-21T04:11:42.3255798Z * Update external systems with the latest state from React.
+2026-05-21T04:11:42.3257095Z * Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+2026-05-21T04:11:42.3258235Z 
+2026-05-21T04:11:42.3259957Z Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+2026-05-21T04:11:42.3261204Z 
+2026-05-21T04:11:42.3261830Z /home/runner/work/Playlix/Playlix/app/components/canvas/CanvasOnboardingHints.tsx:20:5
+2026-05-21T04:11:42.3262585Z   18 |
+2026-05-21T04:11:42.3262886Z   19 |   useEffect(() => {
+2026-05-21T04:11:42.3263336Z > 20 |     setIsMounted(true);
+2026-05-21T04:11:42.3263924Z      |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+2026-05-21T04:11:42.3264462Z   21 |   }, []);
+2026-05-21T04:11:42.3264762Z   22 |
+2026-05-21T04:11:42.3265272Z   23 |   if (!isVisible || !isMounted) {  react-hooks/set-state-in-effect
+2026-05-21T04:11:42.3265757Z 
+2026-05-21T04:11:42.3266231Z /home/runner/work/Playlix/Playlix/app/components/canvas/CoverCard.tsx
+2026-05-21T04:11:42.3299719Z ##[warning]  49:9  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-05-21T04:11:42.3308932Z 
+2026-05-21T04:11:42.3309627Z /home/runner/work/Playlix/Playlix/app/components/canvas/overlays/WelcomeOverlay.tsx
+2026-05-21T04:11:42.3310583Z   36:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+2026-05-21T04:11:42.3311002Z 
+2026-05-21T04:11:42.3312064Z Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+2026-05-21T04:11:42.3313230Z * Update external systems with the latest state from React.
+2026-05-21T04:11:42.3314007Z * Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+2026-05-21T04:11:42.3314492Z 
+2026-05-21T04:11:42.3315337Z Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+2026-05-21T04:11:42.3316085Z 
+2026-05-21T04:11:42.3316477Z /home/runner/work/Playlix/Playlix/app/components/canvas/overlays/WelcomeOverlay.tsx:36:5
+2026-05-21T04:11:42.3316956Z   34 |
+2026-05-21T04:11:42.3317171Z   35 |   useEffect(() => {
+2026-05-21T04:11:42.3317458Z > 36 |     setIsMounted(true);
+2026-05-21T04:11:42.3317832Z      |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+2026-05-21T04:11:42.3318187Z   37 |   }, []);
+2026-05-21T04:11:42.3318378Z   38 |
+2026-05-21T04:11:42.3318692Z   39 |   useEffect(() => {  react-hooks/set-state-in-effect
+2026-05-21T04:11:42.3319169Z 
+2026-05-21T04:11:42.3319650Z /home/runner/work/Playlix/Playlix/app/components/shared/KeyboardChord.tsx
+2026-05-21T04:11:42.3320466Z   37:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+2026-05-21T04:11:42.3320863Z 
+2026-05-21T04:11:42.3321906Z Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+2026-05-21T04:11:42.3323000Z * Update external systems with the latest state from React.
+2026-05-21T04:11:42.3323745Z * Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+2026-05-21T04:11:42.3324228Z 
+2026-05-21T04:11:42.3325060Z Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+2026-05-21T04:11:42.3325773Z 
+2026-05-21T04:11:42.3326144Z /home/runner/work/Playlix/Playlix/app/components/shared/KeyboardChord.tsx:37:5
+2026-05-21T04:11:42.3326754Z   35 |
+2026-05-21T04:11:42.3326961Z   36 |   useEffect(() => {
+2026-05-21T04:11:42.3327291Z > 37 |     setIsMac(getIsMacPlatform());
+2026-05-21T04:11:42.3327687Z      |     ^^^^^^^^ Avoid calling setState() directly within an effect
+2026-05-21T04:11:42.3328038Z   38 |   }, []);
+2026-05-21T04:11:42.3328283Z   39 |
+2026-05-21T04:11:42.3328560Z   40 |   if (isMac) {  react-hooks/set-state-in-effect
+2026-05-21T04:11:42.3328804Z 
+2026-05-21T04:11:42.3329142Z /home/runner/work/Playlix/Playlix/app/components/toolbar/ExportLayoutDialog.tsx
+2026-05-21T04:11:42.3330117Z   28:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+2026-05-21T04:11:42.3330513Z 
+2026-05-21T04:11:42.3331559Z Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+2026-05-21T04:11:42.3332688Z * Update external systems with the latest state from React.
+2026-05-21T04:11:42.3333431Z * Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+2026-05-21T04:11:42.3333907Z 
+2026-05-21T04:11:42.3334728Z Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+2026-05-21T04:11:42.3335440Z 
+2026-05-21T04:11:42.3335801Z /home/runner/work/Playlix/Playlix/app/components/toolbar/ExportLayoutDialog.tsx:28:5
+2026-05-21T04:11:42.3336263Z   26 |
+2026-05-21T04:11:42.3336470Z   27 |   useEffect(() => {
+2026-05-21T04:11:42.3336750Z > 28 |     setIsMounted(true);
+2026-05-21T04:11:42.3337114Z      |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+2026-05-21T04:11:42.3337457Z   29 |   }, []);
+2026-05-21T04:11:42.3337678Z   30 |
+2026-05-21T04:11:42.3337968Z   31 |   useEffect(() => {  react-hooks/set-state-in-effect
+2026-05-21T04:11:42.3338202Z 
+2026-05-21T04:11:42.3338518Z /home/runner/work/Playlix/Playlix/app/components/toolbar/SettingsDialog.tsx
+2026-05-21T04:11:42.3339303Z   31:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+2026-05-21T04:11:42.3339989Z 
+2026-05-21T04:11:42.3341047Z Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+2026-05-21T04:11:42.3342156Z * Update external systems with the latest state from React.
+2026-05-21T04:11:42.3342889Z * Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+2026-05-21T04:11:42.3343564Z 
+2026-05-21T04:11:42.3344374Z Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+2026-05-21T04:11:42.3345104Z 
+2026-05-21T04:11:42.3345459Z /home/runner/work/Playlix/Playlix/app/components/toolbar/SettingsDialog.tsx:31:5
+2026-05-21T04:11:42.3345894Z   29 |
+2026-05-21T04:11:42.3346100Z   30 |   useEffect(() => {
+2026-05-21T04:11:42.3346383Z > 31 |     setIsMounted(true);
+2026-05-21T04:11:42.3346751Z      |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+2026-05-21T04:11:42.3347091Z   32 |   }, []);
+2026-05-21T04:11:42.3347281Z   33 |
+2026-05-21T04:11:42.3347568Z   34 |   useEffect(() => {  react-hooks/set-state-in-effect
+2026-05-21T04:11:42.3347798Z 
+2026-05-21T04:11:42.3348142Z /home/runner/work/Playlix/Playlix/app/components/toolbar/ToolbarTooltipWrap.tsx
+2026-05-21T04:11:42.3348938Z   31:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+2026-05-21T04:11:42.3349336Z 
+2026-05-21T04:11:42.3350517Z Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+2026-05-21T04:11:42.3351786Z * Update external systems with the latest state from React.
+2026-05-21T04:11:42.3352524Z * Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+2026-05-21T04:11:42.3353008Z 
+2026-05-21T04:11:42.3353822Z Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+2026-05-21T04:11:42.3354558Z 
+2026-05-21T04:11:42.3354933Z /home/runner/work/Playlix/Playlix/app/components/toolbar/ToolbarTooltipWrap.tsx:31:5
+2026-05-21T04:11:42.3355381Z   29 |
+2026-05-21T04:11:42.3355590Z   30 |   useEffect(() => {
+2026-05-21T04:11:42.3355874Z > 31 |     setIsMounted(true);
+2026-05-21T04:11:42.3356228Z      |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+2026-05-21T04:11:42.3356594Z   32 |   }, []);
+2026-05-21T04:11:42.3356787Z   33 |
+2026-05-21T04:11:42.3357097Z   34 |   useLayoutEffect(() => {  react-hooks/set-state-in-effect
+2026-05-21T04:11:42.3357377Z 
+2026-05-21T04:11:42.3357655Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useAppCanvas.ts
+2026-05-21T04:11:42.3358257Z    45:3  error    Error: Cannot access refs during render
+2026-05-21T04:11:42.3358499Z 
+2026-05-21T04:11:42.3359928Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3360998Z 
+2026-05-21T04:11:42.3361314Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useAppCanvas.ts:45:3
+2026-05-21T04:11:42.3361948Z   43 |   const [playlistSources, setPlaylistSources] = useState<string[]>([]);
+2026-05-21T04:11:42.3362478Z   44 |   const playlistSourcesRef = useRef(playlistSources);
+2026-05-21T04:11:42.3362928Z > 45 |   playlistSourcesRef.current = playlistSources;
+2026-05-21T04:11:42.3363359Z      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+2026-05-21T04:11:42.3363679Z   46 |
+2026-05-21T04:11:42.3363944Z   47 |   const syncPlaylistSources = useCallback(
+2026-05-21T04:11:42.3364434Z   48 |     (next: string[] | ((previous: string[]) => string[])) => {  react-hooks/refs
+2026-05-21T04:11:42.3365057Z   213:3  error    Error: Cannot access refs during render
+2026-05-21T04:11:42.3365304Z 
+2026-05-21T04:11:42.3366605Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3367857Z 
+2026-05-21T04:11:42.3368177Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useAppCanvas.ts:213:3
+2026-05-21T04:11:42.3368612Z   211 |   });
+2026-05-21T04:11:42.3368794Z   212 |
+2026-05-21T04:11:42.3369172Z > 213 |   discardClearHistoryRef.current = discardClearHistory;
+2026-05-21T04:11:42.3369794Z       |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+2026-05-21T04:11:42.3370113Z   214 |
+2026-05-21T04:11:42.3370407Z   215 |   const canUndoLayout = canUndo || canUndoClear;
+2026-05-21T04:11:42.3371148Z   216 |   const canRedoLayout = canRedo || canRedoClear;                                                                                                              react-hooks/refs
+2026-05-21T04:11:42.3371909Z   425:3  error    Error: Cannot access refs during render
+2026-05-21T04:11:42.3372140Z 
+2026-05-21T04:11:42.3373453Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3374754Z 
+2026-05-21T04:11:42.3375067Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useAppCanvas.ts:425:3
+2026-05-21T04:11:42.3375472Z   423 |   });
+2026-05-21T04:11:42.3375647Z   424 |
+2026-05-21T04:11:42.3375916Z > 425 |   keyboardActionsRef.current = {
+2026-05-21T04:11:42.3376302Z       |   ^^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+2026-05-21T04:11:42.3376637Z   426 |     canFitAllTiles,
+2026-05-21T04:11:42.3376892Z   427 |     canRedoLayout,
+2026-05-21T04:11:42.3377518Z   428 |     canUndoLayout,                                                                                                                                                                                 react-hooks/refs
+2026-05-21T04:11:42.3382303Z ##[warning]  482:6  warning  React Hook useEffect has missing dependencies: 'pendingCenterRectRef' and 'setCenterPlaylistRequest'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/exhaustive-deps
+2026-05-21T04:11:42.3388037Z ##[warning]  596:5  warning  React Hook useCallback has a missing dependency: 'pendingCenterRectRef'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/exhaustive-deps
+2026-05-21T04:11:42.3390278Z 
+2026-05-21T04:11:42.3390613Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasContextMenu.ts
+2026-05-21T04:11:42.3391180Z   29:3  error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3391420Z 
+2026-05-21T04:11:42.3392743Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3394092Z 
+2026-05-21T04:11:42.3394466Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasContextMenu.ts:29:3
+2026-05-21T04:11:42.3394978Z   27 |     useState<ContextMenuState | null>(null);
+2026-05-21T04:11:42.3395421Z   28 |   const contextMenuStateRef = useRef(contextMenuState);
+2026-05-21T04:11:42.3395898Z > 29 |   contextMenuStateRef.current = contextMenuState;
+2026-05-21T04:11:42.3396315Z      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+2026-05-21T04:11:42.3396625Z   30 |
+2026-05-21T04:11:42.3396943Z   31 |   const [menuCanPaste, setMenuCanPaste] = useState(false);
+2026-05-21T04:11:42.3397305Z   32 |  react-hooks/refs
+2026-05-21T04:11:42.3397469Z 
+2026-05-21T04:11:42.3397781Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasPersistence.ts
+2026-05-21T04:11:42.3398371Z    83:3   error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3398744Z 
+2026-05-21T04:11:42.3400210Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3401290Z 
+2026-05-21T04:11:42.3401634Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasPersistence.ts:83:3
+2026-05-21T04:11:42.3402094Z   81 |     useState(false);
+2026-05-21T04:11:42.3402331Z   82 |
+2026-05-21T04:11:42.3402615Z > 83 |   onManualSaveRef.current = onManualSave;
+2026-05-21T04:11:42.3402997Z      |   ^^^^^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+2026-05-21T04:11:42.3403391Z   84 |   onClearUndoRef.current = onClearUndo;
+2026-05-21T04:11:42.3403719Z   85 |   hasTilesRef.current = hasTiles;
+2026-05-21T04:11:42.3404717Z   86 |                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/refs
+2026-05-21T04:11:42.3405624Z    84:3   error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3405858Z 
+2026-05-21T04:11:42.3407164Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3408220Z 
+2026-05-21T04:11:42.3408570Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasPersistence.ts:84:3
+2026-05-21T04:11:42.3408999Z   82 |
+2026-05-21T04:11:42.3409258Z   83 |   onManualSaveRef.current = onManualSave;
+2026-05-21T04:11:42.3409805Z > 84 |   onClearUndoRef.current = onClearUndo;
+2026-05-21T04:11:42.3410197Z      |   ^^^^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+2026-05-21T04:11:42.3410552Z   85 |   hasTilesRef.current = hasTiles;
+2026-05-21T04:11:42.3410818Z   86 |
+2026-05-21T04:11:42.3411843Z   87 |   const bumpClearUndo = useCallback(() => {                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/refs
+2026-05-21T04:11:42.3412876Z    85:3   error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3413267Z 
+2026-05-21T04:11:42.3414586Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3415672Z 
+2026-05-21T04:11:42.3416011Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasPersistence.ts:85:3
+2026-05-21T04:11:42.3416519Z   83 |   onManualSaveRef.current = onManualSave;
+2026-05-21T04:11:42.3416895Z   84 |   onClearUndoRef.current = onClearUndo;
+2026-05-21T04:11:42.3417253Z > 85 |   hasTilesRef.current = hasTiles;
+2026-05-21T04:11:42.3417600Z      |   ^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+2026-05-21T04:11:42.3417899Z   86 |
+2026-05-21T04:11:42.3418154Z   87 |   const bumpClearUndo = useCallback(() => {
+2026-05-21T04:11:42.3419301Z   88 |     setClearUndoRevision((currentRevision) => currentRevision + 1);                                                                                                                                                                                                                                                                                                                             react-hooks/refs
+2026-05-21T04:11:42.3421036Z   259:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+2026-05-21T04:11:42.3421422Z 
+2026-05-21T04:11:42.3422506Z Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+2026-05-21T04:11:42.3423592Z * Update external systems with the latest state from React.
+2026-05-21T04:11:42.3424350Z * Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+2026-05-21T04:11:42.3424821Z 
+2026-05-21T04:11:42.3425668Z Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+2026-05-21T04:11:42.3426382Z 
+2026-05-21T04:11:42.3426763Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasPersistence.ts:259:7
+2026-05-21T04:11:42.3427306Z   257 |     if (!snapshot || snapshot.covers.length === 0) {
+2026-05-21T04:11:42.3427697Z   258 |       isRestoringRef.current = false;
+2026-05-21T04:11:42.3428115Z > 259 |       setHasFinishedInitialRestore(true);
+2026-05-21T04:11:42.3428558Z       |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+2026-05-21T04:11:42.3428935Z   260 |       return;
+2026-05-21T04:11:42.3429138Z   261 |     }
+2026-05-21T04:11:42.3429388Z   262 |  react-hooks/set-state-in-effect
+2026-05-21T04:11:42.3429984Z   382:24  error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3430232Z 
+2026-05-21T04:11:42.3431530Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3432640Z 
+2026-05-21T04:11:42.3432996Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasPersistence.ts:382:24
+2026-05-21T04:11:42.3433424Z   380 |   );
+2026-05-21T04:11:42.3433630Z   381 |
+2026-05-21T04:11:42.3434003Z > 382 |   const canUndoClear = clearUndoCheckpointRef.current !== null;
+2026-05-21T04:11:42.3434536Z       |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot access ref value during render
+2026-05-21T04:11:42.3435067Z   383 |   const canRedoClear = clearRedoCheckpointRef.current !== null;
+2026-05-21T04:11:42.3435495Z   384 |   void clearUndoRevision;
+2026-05-21T04:11:42.3436354Z   385 |                                                                                                                                                                                                                                                                                                                                          react-hooks/refs
+2026-05-21T04:11:42.3437336Z   383:24  error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3437581Z 
+2026-05-21T04:11:42.3438889Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3440119Z 
+2026-05-21T04:11:42.3440507Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasPersistence.ts:383:24
+2026-05-21T04:11:42.3440940Z   381 |
+2026-05-21T04:11:42.3441300Z   382 |   const canUndoClear = clearUndoCheckpointRef.current !== null;
+2026-05-21T04:11:42.3441876Z > 383 |   const canRedoClear = clearRedoCheckpointRef.current !== null;
+2026-05-21T04:11:42.3442415Z       |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot access ref value during render
+2026-05-21T04:11:42.3443010Z   384 |   void clearUndoRevision;
+2026-05-21T04:11:42.3443267Z   385 |
+2026-05-21T04:11:42.3444075Z   386 |   return {                                                                                                                                                                                                                                                                                                                                    react-hooks/refs
+2026-05-21T04:11:42.3444932Z   389:5   error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3445170Z 
+2026-05-21T04:11:42.3446485Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3447592Z 
+2026-05-21T04:11:42.3447969Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasPersistence.ts:389:5
+2026-05-21T04:11:42.3448463Z   387 |     buildCurrentCanvasSnapshot,
+2026-05-21T04:11:42.3448783Z   388 |     canSave: hasTiles,
+2026-05-21T04:11:42.3449050Z > 389 |     canRedoClear,
+2026-05-21T04:11:42.3449356Z       |     ^^^^^^^^^^^^ Cannot access ref value during render
+2026-05-21T04:11:42.3449837Z   390 |     canUndoClear,
+2026-05-21T04:11:42.3450075Z   391 |     clearCanvas,
+2026-05-21T04:11:42.3451151Z   392 |     discardClearHistory,                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/refs
+2026-05-21T04:11:42.3452167Z   389:5   error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3452413Z 
+2026-05-21T04:11:42.3453739Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3454835Z 
+2026-05-21T04:11:42.3455196Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasPersistence.ts:389:5
+2026-05-21T04:11:42.3455687Z   387 |     buildCurrentCanvasSnapshot,
+2026-05-21T04:11:42.3455994Z   388 |     canSave: hasTiles,
+2026-05-21T04:11:42.3456256Z > 389 |     canRedoClear,
+2026-05-21T04:11:42.3456557Z       |     ^^^^^^^^^^^^ Cannot access ref value during render
+2026-05-21T04:11:42.3456890Z   390 |     canUndoClear,
+2026-05-21T04:11:42.3457269Z   391 |     clearCanvas,
+2026-05-21T04:11:42.3458341Z   392 |     discardClearHistory,                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/refs
+2026-05-21T04:11:42.3459362Z   390:5   error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3459863Z 
+2026-05-21T04:11:42.3461189Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3462307Z 
+2026-05-21T04:11:42.3462663Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasPersistence.ts:390:5
+2026-05-21T04:11:42.3463136Z   388 |     canSave: hasTiles,
+2026-05-21T04:11:42.3463552Z   389 |     canRedoClear,
+2026-05-21T04:11:42.3463805Z > 390 |     canUndoClear,
+2026-05-21T04:11:42.3464104Z       |     ^^^^^^^^^^^^ Cannot access ref value during render
+2026-05-21T04:11:42.3464421Z   391 |     clearCanvas,
+2026-05-21T04:11:42.3464682Z   392 |     discardClearHistory,
+2026-05-21T04:11:42.3465838Z   393 |     hasFinishedInitialRestore,                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/refs
+2026-05-21T04:11:42.3466860Z   390:5   error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3467106Z 
+2026-05-21T04:11:42.3468437Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3469698Z 
+2026-05-21T04:11:42.3470057Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasPersistence.ts:390:5
+2026-05-21T04:11:42.3470532Z   388 |     canSave: hasTiles,
+2026-05-21T04:11:42.3470781Z   389 |     canRedoClear,
+2026-05-21T04:11:42.3471029Z > 390 |     canUndoClear,
+2026-05-21T04:11:42.3471326Z       |     ^^^^^^^^^^^^ Cannot access ref value during render
+2026-05-21T04:11:42.3471644Z   391 |     clearCanvas,
+2026-05-21T04:11:42.3471896Z   392 |     discardClearHistory,
+2026-05-21T04:11:42.3473022Z   393 |     hasFinishedInitialRestore,                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/refs
+2026-05-21T04:11:42.3473857Z 
+2026-05-21T04:11:42.3474166Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasPreferences.ts
+2026-05-21T04:11:42.3474953Z   23:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+2026-05-21T04:11:42.3475370Z 
+2026-05-21T04:11:42.3476424Z Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+2026-05-21T04:11:42.3477542Z * Update external systems with the latest state from React.
+2026-05-21T04:11:42.3478465Z * Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+2026-05-21T04:11:42.3478949Z 
+2026-05-21T04:11:42.3479936Z Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+2026-05-21T04:11:42.3480675Z 
+2026-05-21T04:11:42.3481018Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasPreferences.ts:23:5
+2026-05-21T04:11:42.3481463Z   21 |
+2026-05-21T04:11:42.3481665Z   22 |   useEffect(() => {
+2026-05-21T04:11:42.3482006Z > 23 |     setPreferences(readCanvasPreferences());
+2026-05-21T04:11:42.3482431Z      |     ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+2026-05-21T04:11:42.3482848Z   24 |     setHasHydratedPreferences(true);
+2026-05-21T04:11:42.3483128Z   25 |   }, []);
+2026-05-21T04:11:42.3483380Z   26 |  react-hooks/set-state-in-effect
+2026-05-21T04:11:42.3483581Z 
+2026-05-21T04:11:42.3483884Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasSelection.ts
+2026-05-21T04:11:42.3484432Z   29:3  error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3484815Z 
+2026-05-21T04:11:42.3486147Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3487257Z 
+2026-05-21T04:11:42.3487601Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasSelection.ts:29:3
+2026-05-21T04:11:42.3488076Z   27 |   }, [selectedTileIds, tiles]);
+2026-05-21T04:11:42.3488345Z   28 |
+2026-05-21T04:11:42.3488677Z > 29 |   selectedTileIdsRef.current = validSelectedTileIds;
+2026-05-21T04:11:42.3489119Z      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+2026-05-21T04:11:42.3489604Z   30 |
+2026-05-21T04:11:42.3489856Z   31 |   const clearTileSelection = () => {
+2026-05-21T04:11:42.3490264Z   32 |     setSelectedTileIds(new Set());  react-hooks/refs
+2026-05-21T04:11:42.3490490Z 
+2026-05-21T04:11:42.3490809Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasTiles.ts
+2026-05-21T04:11:42.3491340Z   120:3   error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3491569Z 
+2026-05-21T04:11:42.3492890Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3494022Z 
+2026-05-21T04:11:42.3494344Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasTiles.ts:120:3
+2026-05-21T04:11:42.3494968Z   118 |   const dragStartCheckpointRef = useRef<TileLayoutCheckpoint | null>(null);
+2026-05-21T04:11:42.3495379Z   119 |
+2026-05-21T04:11:42.3495644Z > 120 |   tileStateRef.current = tileState;
+2026-05-21T04:11:42.3496035Z       |   ^^^^^^^^^^^^^^^^^^^^ Cannot update ref during render
+2026-05-21T04:11:42.3496332Z   121 |
+2026-05-21T04:11:42.3496600Z   122 |   const setTileStateWithRef = useCallback(
+2026-05-21T04:11:42.3497160Z   123 |     (nextState: TileState | ((currentState: TileState) => TileState)) => {  react-hooks/refs
+2026-05-21T04:11:42.3497774Z   562:19  error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3498022Z 
+2026-05-21T04:11:42.3499346Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3500788Z 
+2026-05-21T04:11:42.3501130Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasTiles.ts:562:19
+2026-05-21T04:11:42.3501559Z   560 |   );
+2026-05-21T04:11:42.3501759Z   561 |
+2026-05-21T04:11:42.3502264Z > 562 |   const canUndo = undoStackRef.current.length > 0;
+2026-05-21T04:11:42.3502729Z       |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot access ref value during render
+2026-05-21T04:11:42.3503186Z   563 |   const canRedo = redoStackRef.current.length > 0;
+2026-05-21T04:11:42.3503569Z   564 |   void historyRevision;
+2026-05-21T04:11:42.3503939Z   565 |                                                                       react-hooks/refs
+2026-05-21T04:11:42.3504444Z   563:19  error  Error: Cannot access refs during render
+2026-05-21T04:11:42.3504678Z 
+2026-05-21T04:11:42.3505999Z React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+2026-05-21T04:11:42.3507107Z 
+2026-05-21T04:11:42.3507423Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useCanvasTiles.ts:563:19
+2026-05-21T04:11:42.3507850Z   561 |
+2026-05-21T04:11:42.3508136Z   562 |   const canUndo = undoStackRef.current.length > 0;
+2026-05-21T04:11:42.3508725Z > 563 |   const canRedo = redoStackRef.current.length > 0;
+2026-05-21T04:11:42.3509183Z       |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Cannot access ref value during render
+2026-05-21T04:11:42.3510069Z   564 |   void historyRevision;
+2026-05-21T04:11:42.3510345Z   565 |
+2026-05-21T04:11:42.3510713Z   566 |   return {                                                                 react-hooks/refs
+2026-05-21T04:11:42.3511009Z 
+2026-05-21T04:11:42.3511317Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useWelcomeOverlay.ts
+2026-05-21T04:11:42.3512095Z   14:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+2026-05-21T04:11:42.3512494Z 
+2026-05-21T04:11:42.3513540Z Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+2026-05-21T04:11:42.3514664Z * Update external systems with the latest state from React.
+2026-05-21T04:11:42.3515423Z * Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+2026-05-21T04:11:42.3515901Z 
+2026-05-21T04:11:42.3516725Z Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+2026-05-21T04:11:42.3517460Z 
+2026-05-21T04:11:42.3517790Z /home/runner/work/Playlix/Playlix/app/hooks/canvas/useWelcomeOverlay.ts:14:5
+2026-05-21T04:11:42.3518204Z   12 |
+2026-05-21T04:11:42.3518406Z   13 |   useEffect(() => {
+2026-05-21T04:11:42.3518784Z > 14 |     setIsWelcomeVisible(!hasWelcomeBeenDismissed());
+2026-05-21T04:11:42.3519252Z      |     ^^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+2026-05-21T04:11:42.3519807Z   15 |     setHasHydratedWelcomeState(true);
+2026-05-21T04:11:42.3520072Z   16 |   }, []);
+2026-05-21T04:11:42.3520303Z   17 |  react-hooks/set-state-in-effect
+2026-05-21T04:11:42.3520486Z 
+2026-05-21T04:11:42.3520814Z /home/runner/work/Playlix/Playlix/app/hooks/toolbar/useOnboardingHintPlacements.ts
+2026-05-21T04:11:42.3521569Z   20:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+2026-05-21T04:11:42.3521939Z 
+2026-05-21T04:11:42.3522996Z Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+2026-05-21T04:11:42.3524103Z * Update external systems with the latest state from React.
+2026-05-21T04:11:42.3524855Z * Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+2026-05-21T04:11:42.3525526Z 
+2026-05-21T04:11:42.3526354Z Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+2026-05-21T04:11:42.3527077Z 
+2026-05-21T04:11:42.3527476Z /home/runner/work/Playlix/Playlix/app/hooks/toolbar/useOnboardingHintPlacements.ts:20:7
+2026-05-21T04:11:42.3527986Z   18 |   useLayoutEffect(() => {
+2026-05-21T04:11:42.3528256Z   19 |     if (!isEnabled) {
+2026-05-21T04:11:42.3528556Z > 20 |       setPlaylistInput(null);
+2026-05-21T04:11:42.3528943Z      |       ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+2026-05-21T04:11:42.3529309Z   21 |       return;
+2026-05-21T04:11:42.3529667Z   22 |     }
+2026-05-21T04:11:42.3529923Z   23 |  react-hooks/set-state-in-effect
+2026-05-21T04:11:42.3530125Z 
+2026-05-21T04:11:42.3530397Z /home/runner/work/Playlix/Playlix/app/lib/canvas/canvas-layout.ts
+2026-05-21T04:11:42.3531767Z ##[warning]  109:55  warning  'newBatchBounds' is defined but never used  @typescript-eslint/no-unused-vars
+2026-05-21T04:11:42.3532855Z 
+2026-05-21T04:11:42.3533145Z /home/runner/work/Playlix/Playlix/app/lib/canvas/canvas-storage.ts
+2026-05-21T04:11:42.3534298Z ##[warning]  1:10  warning  'toCanvasCoverWire' is defined but never used  @typescript-eslint/no-unused-vars
+2026-05-21T04:11:42.3535250Z 
+2026-05-21T04:11:42.3535548Z /home/runner/work/Playlix/Playlix/app/lib/canvas/tile-clipboard.ts
+2026-05-21T04:11:42.3536404Z ##[warning]  4:15  warning  'PlaylistCover' is defined but never used  @typescript-eslint/no-unused-vars
+2026-05-21T04:11:42.3537299Z 
+2026-05-21T04:11:42.3537716Z ✖ 35 problems (29 errors, 6 warnings)
+2026-05-21T04:11:42.3537930Z 
+2026-05-21T04:11:42.3807624Z ##[error]Process completed with exit code 1.

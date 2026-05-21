@@ -1,4 +1,3 @@
-import { toCanvasCoverWire } from "../playlist/playlist-cover";
 import type { CanvasTile } from "./canvas-layout";
 import type {
   CanvasCameraWire,
