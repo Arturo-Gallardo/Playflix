@@ -29,7 +29,7 @@ export function AppCanvas() {
 function AppCanvasRoot() {
   const auth = useSpotifyAuth();
   const canvas = useAppCanvas();
-  const welcome = useWelcomeOverlay();
+  const welcome = useWelcomeOverlay(auth.isDemoMode);
   const [stageKey, setStageKey] = useState(0);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);

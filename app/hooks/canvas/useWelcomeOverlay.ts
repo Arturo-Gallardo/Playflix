@@ -6,19 +6,22 @@ import {
   markWelcomeDismissed,
 } from "../../lib/canvas/welcome-storage";
 
-export function useWelcomeOverlay() {
+export function useWelcomeOverlay(isDemoMode = false) {
   const [isWelcomeVisible, setIsWelcomeVisible] = useState(false);
   const [hasHydratedWelcomeState, setHasHydratedWelcomeState] = useState(false);
 
   useEffect(() => {
-    setIsWelcomeVisible(!hasWelcomeBeenDismissed());
+    setIsWelcomeVisible(isDemoMode || !hasWelcomeBeenDismissed());
     setHasHydratedWelcomeState(true);
-  }, []);
+  }, [isDemoMode]);
 
   const dismissWelcome = useCallback(() => {
-    markWelcomeDismissed();
+    if (!isDemoMode) {
+      markWelcomeDismissed();
+    }
+
     setIsWelcomeVisible(false);
-  }, []);
+  }, [isDemoMode]);
 
   return {
     dismissWelcome,
