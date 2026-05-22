@@ -15,7 +15,6 @@ export type TileOrderCriterion =
   | "color"
   | "dateAdded"
   | "dateReleased"
-  | "duration"
   | "tempo"
   | "popularity";
 
@@ -62,21 +61,6 @@ export function sortTilesByDateReleased(tiles: CanvasTile[]) {
 
     if (leftReleaseDate !== rightReleaseDate) {
       return leftReleaseDate.localeCompare(rightReleaseDate);
-    }
-
-    return compareTitles(leftTile, rightTile);
-  });
-}
-
-export function sortTilesByDuration(tiles: CanvasTile[]) {
-  return [...tiles].sort((leftTile, rightTile) => {
-    const durationComparison = compareNullableNumbers(
-      leftTile.cover.durationMs,
-      rightTile.cover.durationMs,
-    );
-
-    if (durationComparison !== 0) {
-      return durationComparison;
     }
 
     return compareTitles(leftTile, rightTile);
@@ -170,7 +154,6 @@ export function getTileOrderCriterionLabel(criterion: TileOrderCriterion) {
     color: "color",
     dateAdded: "date added",
     dateReleased: "date released",
-    duration: "hours played",
     tempo: "tempo",
     popularity: "popularity",
   };

@@ -33,6 +33,11 @@ export default function TermsPage() {
           are stored in your browser unless you export them yourself. Playlix
           is not made by, endorsed by, or affiliated with Spotify.
         </p>
+        <p>
+          Some public demos may run in a fixed demo mode that shows one
+          pre-configured Spotify account to all visitors. That mode is for
+          proof-of-concept previews only.
+        </p>
       </LegalSection>
 
       <LegalSection title="Your responsibilities">
@@ -61,14 +66,25 @@ export default function TermsPage() {
         </ul>
       </LegalSection>
 
-      <LegalSection title="Accounts and sign-in">
+      <LegalSection title="Spotify sign-in">
         <p>
-          Optional Spotify sign-in may be added later. Spotify&apos;s terms and
-          policies apply to your Spotify account when you connect it. See our{" "}
+          Playlix uses Spotify sign-in to read your playlists and basic profile
+          info. Access is <strong className="text-white/90">read-only</strong> —
+          the app does not change your Spotify library, post on your behalf, or
+          control playback through these permissions.
+        </p>
+        <p>
+          Spotify&apos;s terms and policies apply to your Spotify account when
+          you connect it. See our{" "}
           <Link className="legal-page-link" href="/privacy">
             Privacy
           </Link>{" "}
-          page for how we handle data.
+          page for how session cookies and API requests are handled.
+        </p>
+        <p>
+          You can sign out from Playlix at any time (unless demo mode disables
+          account controls). That clears your Playlix session; it does not
+          delete your Spotify account.
         </p>
       </LegalSection>
 
@@ -81,6 +97,19 @@ export default function TermsPage() {
           <code className="legal-page-code">.playlix.json</code> file if you
           want a backup.
         </p>
+        <p>
+          Spotify may change API availability, rate limits, or account
+          requirements. Playlix may stop working for some accounts or playlists
+          if Spotify restricts access.
+        </p>
+        <p>
+          The site uses Vercel for hosting plus Vercel Web Analytics and Speed
+          Insights. See our{" "}
+          <Link className="legal-page-link" href="/privacy">
+            Privacy
+          </Link>{" "}
+          page for what those services collect.
+        </p>
       </LegalSection>
 
       <LegalSection title="Limitation of liability">
@@ -88,7 +117,8 @@ export default function TermsPage() {
           To the fullest extent permitted by law, Playlix and its operator are
           not liable for indirect, incidental, or consequential damages arising
           from your use of the site — including lost data, lost profits, or
-          issues caused by third-party services (Spotify, Vercel).
+          issues caused by third-party services (Spotify, Vercel, Vercel
+          Analytics, Speed Insights).
         </p>
       </LegalSection>
 

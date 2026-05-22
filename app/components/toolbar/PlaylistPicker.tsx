@@ -25,6 +25,7 @@ import { canvasLayoutFileExtension } from "../../lib/canvas/canvas-import-export
 import type { SpotifyPlaylistSelection } from "../../types/spotify-playlist";
 import { ToolbarPressButton } from "./ToolbarPressButton";
 import { ToolbarTooltipWrap } from "./ToolbarTooltipWrap";
+import { PlaylixLogo } from "../shared/PlaylixLogo";
 
 const toolbarIconClassName = "size-4";
 
@@ -235,8 +236,8 @@ export function PlaylistPicker({
   }
 
   return (
-    <div className="pointer-events-auto flex min-w-0 items-center gap-3">
-      <div className="toolbar-logo font-logo">SP</div>
+    <div className="pointer-events-auto flex min-w-0 items-center gap-1.5">
+      <PlaylixLogo />
 
       <div className="min-w-0" data-onboarding-target="playlist-picker" ref={rootRef}>
         <button

@@ -14,7 +14,9 @@ type SettingsDialogProps = {
   onClose: () => void;
   onCoverDetailsHiddenChange: (hidden: boolean) => void;
   onShortcutLegendVisibleChange: (visible: boolean) => void;
+  isDemoMode: boolean;
   onSignOut: () => void;
+  onSwitchAccount: () => void;
   user: SpotifyUserProfile | null;
 };
 
@@ -26,7 +28,9 @@ export function SettingsDialog({
   onClose,
   onCoverDetailsHiddenChange,
   onShortcutLegendVisibleChange,
+  isDemoMode,
   onSignOut,
+  onSwitchAccount,
   user,
 }: SettingsDialogProps) {
   const dialogTitleId = useId();
@@ -104,15 +108,30 @@ export function SettingsDialog({
                   <p className="truncate text-sm font-semibold text-white">
                     {user.displayName}
                   </p>
-                  <p className="text-[10px] text-white/45">Connected to Spotify</p>
+                  <p className="text-[10px] text-white/45">
+                    {isDemoMode ? "Demo account (read-only session)" : "Connected to Spotify"}
+                  </p>
                 </div>
-                <button
-                  className="toolbar-button shrink-0 px-3 py-1.5 text-[10px]"
-                  onClick={onSignOut}
-                  type="button"
-                >
-                  sign out
-                </button>
+                <div className="flex shrink-0 flex-col gap-1.5">
+                  <button
+                    className="toolbar-button px-3 py-1.5 text-[10px] disabled:cursor-not-allowed disabled:opacity-40"
+                    disabled={isDemoMode}
+                    onClick={onSwitchAccount}
+                    title={isDemoMode ? "Disabled in demo mode" : undefined}
+                    type="button"
+                  >
+                    switch account
+                  </button>
+                  <button
+                    className="toolbar-button px-3 py-1.5 text-[10px] disabled:cursor-not-allowed disabled:opacity-40"
+                    disabled={isDemoMode}
+                    onClick={onSignOut}
+                    title={isDemoMode ? "Disabled in demo mode" : undefined}
+                    type="button"
+                  >
+                    sign out
+                  </button>
+                </div>
               </div>
             </section>
           ) : null}

@@ -36,12 +36,11 @@ import {
   sortTilesByColor,
   sortTilesByDateAdded,
   sortTilesByDateReleased,
-  sortTilesByDuration,
   sortTilesByPopularity,
   sortTilesByTempo,
   type TileOrderCriterion,
 } from "../../lib/canvas/tile-ordering";
-import { getGridCanvasBounds } from "../../lib/canvas/canvas-layout";
+import { getGridBoundsAtOrigin } from "../../lib/canvas/canvas-layout";
 
 export function useAppCanvas() {
   const { loadNotification, showNotification } = useCanvasNotifications();
@@ -156,6 +155,14 @@ export function useAppCanvas() {
     movedTileIds,
     tiles,
   });
+
+  const requestCenterOnPlaylist = useCallback(
+    (trackCount: number, gridOrigin: { x: number; y: number }) => {
+      pendingCenterRectRef.current = getGridBoundsAtOrigin(trackCount, gridOrigin);
+      setCenterPlaylistRequest((currentRequest) => currentRequest + 1);
+    },
+    [setCenterPlaylistRequest],
+  );
 
   const {
     buildCurrentCanvasSnapshot,
@@ -307,8 +314,6 @@ export function useAppCanvas() {
           sortedTiles = sortTilesByDateAdded(selectedTiles);
         } else if (criterion === "dateReleased") {
           sortedTiles = sortTilesByDateReleased(selectedTiles);
-        } else if (criterion === "duration") {
-          sortedTiles = sortTilesByDuration(selectedTiles);
         } else if (criterion === "tempo") {
           sortedTiles = await sortTilesByTempo(selectedTiles);
         } else {
@@ -601,19 +606,32 @@ export function useAppCanvas() {
     beginTileDragCheckpoint();
 
     const batchId = crypto.randomUUID().slice(0, 8);
-    let playlistBounds = getGridCanvasBounds(0);
+    const playlistContext = {
+      columnCount: 1,
+      gridOrigin: { x: 0, y: 0 },
+      loadedCount: 0,
+    };
 
     const totalTracks = await loadPlaylistProgressively(playlist.id, {
       onBatch: (covers) => {
+        const isFirstBatch = playlistContext.loadedCount === 0;
         const playlistCovers = covers.map((cover) => ({
           ...cover,
           playlistName: playlist.name,
         }));
 
-        playlistBounds = appendPlaylistTiles(playlistCovers, batchId, {
-          continueGrid: true,
+        appendPlaylistTiles(playlistCovers, batchId, {
+          continueGrid: playlistContext.loadedCount > 0,
           expectedTotal: playlist.trackCount,
+          playlistContext,
         });
+
+        if (isFirstBatch) {
+          requestCenterOnPlaylist(
+            Math.max(playlist.trackCount, covers.length),
+            playlistContext.gridOrigin,
+          );
+        }
       },
     });
 
@@ -622,8 +640,7 @@ export function useAppCanvas() {
       return;
     }
 
-    pendingCenterRectRef.current = playlistBounds;
-    setCenterPlaylistRequest((currentRequest) => currentRequest + 1);
+    requestCenterOnPlaylist(totalTracks, playlistContext.gridOrigin);
 
     syncPlaylistSources((currentSources) => [...currentSources, playlist.url]);
     commitTileDragCheckpoint();

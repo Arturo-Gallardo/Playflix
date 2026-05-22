@@ -5,6 +5,11 @@ import {
   spotifyRefreshTokenMaxAgeSeconds,
   spotifyTokenRefreshSkewMs,
 } from "./constants";
+import { isPlaylixDemoMode } from "./demo-config";
+import {
+  getDemoSpotifyAccessToken,
+  getDemoSpotifySession,
+} from "./demo-session";
 import { refreshSpotifyAccessToken, type SpotifyTokenBundle } from "./oauth";
 
 type StoredSpotifySession = {
@@ -112,6 +117,10 @@ async function writeSessionCookies(
 }
 
 export async function clearSpotifySession() {
+  if (isPlaylixDemoMode()) {
+    return;
+  }
+
   const cookieStore = await cookies();
 
   for (const name of Object.values(spotifyCookieNames)) {
@@ -146,14 +155,22 @@ export async function createSpotifySession(
   tokens: SpotifyTokenBundle,
   user: SpotifyUserProfile,
 ) {
+  if (isPlaylixDemoMode()) {
+    return;
+  }
+
   await writeSessionCookies(tokens, user);
 }
 
 export async function getSpotifySession(): Promise<SpotifySessionResponse> {
+  if (isPlaylixDemoMode()) {
+    return getDemoSpotifySession();
+  }
+
   const storedSession = await readStoredSession();
 
   if (!storedSession) {
-    return { authenticated: false, user: null };
+    return { authenticated: false, isDemoMode: false, user: null };
   }
 
   const isExpired =
@@ -162,6 +179,7 @@ export async function getSpotifySession(): Promise<SpotifySessionResponse> {
   if (!isExpired) {
     return {
       authenticated: true,
+      isDemoMode: false,
       user: storedSession.user,
     };
   }
@@ -170,7 +188,7 @@ export async function getSpotifySession(): Promise<SpotifySessionResponse> {
 
   if (!refreshed.ok) {
     await clearSpotifySession();
-    return { authenticated: false, user: null };
+    return { authenticated: false, isDemoMode: false, user: null };
   }
 
   await writeSessionCookies(
@@ -181,11 +199,16 @@ export async function getSpotifySession(): Promise<SpotifySessionResponse> {
 
   return {
     authenticated: true,
+    isDemoMode: false,
     user: storedSession.user,
   };
 }
 
 export async function getSpotifyAccessToken() {
+  if (isPlaylixDemoMode()) {
+    return getDemoSpotifyAccessToken();
+  }
+
   const storedSession = await readStoredSession();
 
   if (!storedSession) {

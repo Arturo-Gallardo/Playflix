@@ -151,6 +151,17 @@ export function createCanvasTilesContinuingGrid(
   });
 }
 
+export function getGridBoundsAtOrigin(tileCount: number, origin: Point): Rect {
+  const localBounds = getGridCanvasBounds(tileCount);
+
+  return {
+    x: origin.x,
+    y: origin.y,
+    width: localBounds.width,
+    height: localBounds.height,
+  };
+}
+
 export function getAppendOrigin(existingBounds: Rect, newBatchBounds: Rect): Point {
   const hasExistingTiles =
     existingBounds.width > 1 || existingBounds.height > 1;

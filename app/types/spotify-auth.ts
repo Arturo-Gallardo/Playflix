@@ -7,10 +7,12 @@ export type SpotifyUserProfile = {
 export type SpotifySessionResponse =
   | {
       authenticated: true;
+      isDemoMode: boolean;
       user: SpotifyUserProfile;
     }
   | {
       authenticated: false;
+      isDemoMode: boolean;
       user: null;
     };
 

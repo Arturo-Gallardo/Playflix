@@ -4,12 +4,12 @@ import { useCallback, useRef, useState } from "react";
 import {
   canvasTileConfig,
   createCanvasTilesContinuingGrid,
-  createCanvasTilesWithIds,
   resolvePastedTileId,
   resolveRestoredTileId,
   expandRectBounds,
   getAppendOrigin,
   getBalancedColumnCount,
+  getGridBoundsAtOrigin,
   getGridCanvasBounds,
   getRectBounds,
   type CanvasTile,
@@ -30,9 +30,17 @@ import type { PlaylistCover } from "../../types/playlist";
 
 const maxTileHistoryEntries = 50;
 
+type PlaylistAppendContext = {
+  columnCount: number;
+  gridOrigin: Point;
+  loadedCount: number;
+};
+
 type AppendPlaylistTilesOptions = {
+  /** Continue the current playlist block (pagination), not the whole canvas. */
   continueGrid?: boolean;
   expectedTotal?: number;
+  playlistContext?: PlaylistAppendContext;
 };
 
 type TileState = {
@@ -238,43 +246,55 @@ export function useCanvasTiles({
 
         const continueGrid = options?.continueGrid === true;
         const expectedTotal = options?.expectedTotal ?? 0;
-        const startIndex = currentState.tiles.length;
-        const columnCount =
-          continueGrid && expectedTotal > 0
-            ? getBalancedColumnCount(expectedTotal)
-            : continueGrid && startIndex > 0
-              ? currentState.columnCount
-              : getBalancedColumnCount(startIndex + covers.length);
+        const playlistContext = options?.playlistContext;
+        const isContinuingPlaylist =
+          continueGrid &&
+          playlistContext !== undefined &&
+          playlistContext.loadedCount > 0;
 
         let nextBatchTiles: CanvasTile[];
+        let columnCount: number;
 
-        if (continueGrid) {
+        if (isContinuingPlaylist && playlistContext) {
+          columnCount = playlistContext.columnCount;
+
           nextBatchTiles = createCanvasTilesContinuingGrid(
             covers,
             (_cover, index) => batchTileIds[index],
-            startIndex,
+            playlistContext.loadedCount,
             columnCount,
-            { x: 0, y: 0 },
+            playlistContext.gridOrigin,
           );
         } else {
-          const localBatchBounds = getRectBounds(
-            createCanvasTilesWithIds(
-              covers,
-              (_cover, index) => batchTileIds[index],
-              { x: 0, y: 0 },
-            ),
-          );
+          const projectedCount =
+            expectedTotal > 0 ? expectedTotal : covers.length;
+          columnCount = getBalancedColumnCount(projectedCount);
 
+          const placeholderBounds = getGridBoundsAtOrigin(projectedCount, {
+            x: 0,
+            y: 0,
+          });
           const origin =
             currentState.tiles.length === 0
               ? { x: 0, y: 0 }
-              : getAppendOrigin(currentState.bounds, localBatchBounds);
+              : getAppendOrigin(currentState.bounds, placeholderBounds);
 
-          nextBatchTiles = createCanvasTilesWithIds(
+          nextBatchTiles = createCanvasTilesContinuingGrid(
             covers,
             (_cover, index) => batchTileIds[index],
+            0,
+            columnCount,
             origin,
           );
+
+          if (playlistContext) {
+            playlistContext.gridOrigin = origin;
+            playlistContext.columnCount = columnCount;
+          }
+        }
+
+        if (playlistContext) {
+          playlistContext.loadedCount += covers.length;
         }
 
         const nextTiles = [...currentState.tiles, ...nextBatchTiles];
@@ -282,9 +302,7 @@ export function useCanvasTiles({
 
         return {
           bounds: nextBounds,
-          columnCount: continueGrid
-            ? columnCount
-            : getBalancedColumnCount(nextTiles.length),
+          columnCount: getBalancedColumnCount(nextTiles.length),
           movedTileIds: currentState.movedTileIds,
           tileIndexById: buildTileIndexById(nextTiles),
           tiles: nextTiles,

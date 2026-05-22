@@ -4,9 +4,13 @@ import { buildSpotifyAppUrl } from "../../../lib/spotify/app-origin";
 import { getSpotifyConfig } from "../../../lib/spotify/config";
 import { isPlaylixDemoMode } from "../../../lib/spotify/demo-config";
 import { buildSpotifyAuthorizeUrl } from "../../../lib/spotify/oauth";
-import { setSpotifyOAuthState } from "../../../lib/spotify/session";
+import {
+  clearSpotifySession,
+  setSpotifyOAuthState,
+} from "../../../lib/spotify/session";
 
-export async function GET(request: Request) {
+/** Clear Playlix session, then restart OAuth with Spotify's account picker. */
+export async function GET() {
   if (isPlaylixDemoMode()) {
     return NextResponse.redirect(buildSpotifyAppUrl("/").toString());
   }
@@ -20,13 +24,13 @@ export async function GET(request: Request) {
     );
   }
 
-  const requestUrl = new URL(request.url);
-  const showDialog = requestUrl.searchParams.get("show_dialog") === "true";
+  await clearSpotifySession();
+
   const state = randomUUID();
 
   await setSpotifyOAuthState(state);
 
   return NextResponse.redirect(
-    buildSpotifyAuthorizeUrl(state, { showDialog }),
+    buildSpotifyAuthorizeUrl(state, { showDialog: true }),
   );
 }

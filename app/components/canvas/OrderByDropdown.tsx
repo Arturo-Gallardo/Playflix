@@ -10,7 +10,6 @@ const orderOptions: Array<{ criterion: TileOrderCriterion; label: string }> = [
   { criterion: "color", label: "Color" },
   { criterion: "dateAdded", label: "Date added" },
   { criterion: "dateReleased", label: "Date released" },
-  { criterion: "duration", label: "Hours played" },
   { criterion: "tempo", label: "Tempo" },
   { criterion: "popularity", label: "Popularity" },
 ];

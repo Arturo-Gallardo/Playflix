@@ -54,6 +54,7 @@ function AppCanvasRoot() {
           errorMessage={canvas.errorMessage}
           hasTilesOnCanvas={canvas.tiles.length > 0}
           isAuthenticated={auth.isAuthenticated}
+          isDemoMode={auth.isDemoMode}
           onCanvasClear={canvas.clearCanvas}
           onCanvasExport={() => setIsExportDialogOpen(true)}
           onCanvasImport={canvas.handleCanvasImport}
@@ -68,6 +69,7 @@ function AppCanvasRoot() {
           onSignOut={() => {
             void auth.signOut();
           }}
+          onSwitchAccount={auth.switchAccount}
           onZoomIn={canvas.handleZoomIn}
           onZoomOut={canvas.handleZoomOut}
           playlistStatus={canvas.playlistStatus}
@@ -104,6 +106,7 @@ function AppCanvasRoot() {
         <SettingsDialog
           areCoverDetailsHidden={canvas.areCoverDetailsHidden}
           isShortcutLegendVisible={canvas.isShortcutLegendVisible}
+          isDemoMode={auth.isDemoMode}
           onClearPlaylistCache={canvas.handleClearPlaylistCache}
           onClearSavedLayout={canvas.handleClearSavedLayout}
           onClose={() => setIsSettingsOpen(false)}
@@ -112,6 +115,7 @@ function AppCanvasRoot() {
           onSignOut={() => {
             void auth.signOut();
           }}
+          onSwitchAccount={auth.switchAccount}
           user={auth.user}
         />
       ) : null}

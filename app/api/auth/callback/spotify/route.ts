@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { buildSpotifyAppUrl } from "../../../../lib/spotify/app-origin";
+import { isPlaylixDemoMode } from "../../../../lib/spotify/demo-config";
 import { exchangeAuthorizationCode } from "../../../../lib/spotify/oauth";
 import {
   consumeSpotifyOAuthState,
@@ -16,6 +17,10 @@ function redirectWithAuthError(message: string) {
 }
 
 export async function GET(request: Request) {
+  if (isPlaylixDemoMode()) {
+    return NextResponse.redirect(buildSpotifyAppUrl("/").toString());
+  }
+
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
   const state = requestUrl.searchParams.get("state");

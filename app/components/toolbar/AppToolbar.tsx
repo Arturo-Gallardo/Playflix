@@ -32,6 +32,7 @@ type AppToolbarProps = {
   errorMessage: string | null;
   hasTilesOnCanvas: boolean;
   isAuthenticated: boolean;
+  isDemoMode: boolean;
   onCanvasClear: () => void;
   onCanvasExport: () => void;
   onCanvasImport: (file: File) => Promise<void>;
@@ -44,6 +45,7 @@ type AppToolbarProps = {
   onSettingsOpen: () => void;
   onSignIn: () => void;
   onSignOut: () => void;
+  onSwitchAccount: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   playlistStatus: PlaylistLoadStatus;
@@ -61,6 +63,7 @@ export function AppToolbar({
   errorMessage,
   hasTilesOnCanvas,
   isAuthenticated,
+  isDemoMode,
   onCanvasClear,
   onCanvasExport,
   onCanvasImport,
@@ -73,6 +76,7 @@ export function AppToolbar({
   onSettingsOpen,
   onSignIn,
   onSignOut,
+  onSwitchAccount,
   onZoomIn,
   onZoomOut,
   playlistStatus,
@@ -167,7 +171,12 @@ export function AppToolbar({
           onZoomOut={onZoomOut}
         />
         {isAuthenticated && user ? (
-          <ToolbarAccountMenu onSignOut={onSignOut} user={user} />
+          <ToolbarAccountMenu
+            isDemoMode={isDemoMode}
+            onSignOut={onSignOut}
+            onSwitchAccount={onSwitchAccount}
+            user={user}
+          />
         ) : (
           <ToolbarTooltipWrap label="Sign in with Spotify">
             <ToolbarPressButton

@@ -10,7 +10,7 @@ import { legalContactEmail } from "../lib/legal/contact-email";
 export const metadata: Metadata = {
   title: "Privacy — Playlix",
   description:
-    "How Playlix handles your data: browser storage and Spotify playlist loading.",
+    "How Playlix handles your data: browser storage, Spotify sign-in, and playlist loading.",
 };
 
 export default function PrivacyPage() {
@@ -21,15 +21,15 @@ export default function PrivacyPage() {
     >
       <LegalSection title="The short version">
         <p>
-          Playlix is a visual canvas for Spotify playlists. Your layouts and
-          preferences stay in{" "}
-          <strong className="text-white/90">this browser</strong>. There is no
-          Playlix account database and no paid tier tracking you across the
-          web.
+          Playlix is a visual canvas for Spotify playlists. Your tile layouts
+          and display preferences stay in{" "}
+          <strong className="text-white/90">this browser</strong>. We do not
+          run a Playlix user database, sell your data, or show ads.
         </p>
         <p>
-          We do not sell your data or run ads. Update this section when Spotify
-          sign-in or server-side features are added.
+          To load your playlists, the app uses Spotify sign-in with{" "}
+          <strong className="text-white/90">read-only</strong> access. We never
+          post, edit, or delete anything on your Spotify account.
         </p>
       </LegalSection>
 
@@ -56,34 +56,75 @@ export default function PrivacyPage() {
         </p>
       </LegalSection>
 
+      <LegalSection title="Spotify sign-in and session cookies">
+        <p>
+          When you sign in with Spotify, Playlix stores short-lived session
+          cookies on our domain so the app can load your playlists. These are{" "}
+          <strong className="text-white/90">httpOnly</strong> cookies (not
+          readable by page scripts) and typically include:
+        </p>
+        <ul className="legal-page-list">
+          <li>Spotify access and refresh tokens for your session</li>
+          <li>Basic profile info shown in the app (display name, avatar)</li>
+          <li>Temporary OAuth state used during sign-in</li>
+        </ul>
+        <p>
+          We request read-only scopes: private and collaborative playlist
+          access, plus basic profile info. Sign out clears Playlix session
+          cookies. Switch account starts a new Spotify authorization flow.
+        </p>
+        <p>
+          Some deployments may run in <strong className="text-white/90">demo
+          mode</strong>, where everyone sees one pre-configured Spotify account
+          and individual sign-in is disabled. In that case, no personal Spotify
+          session is created for visitors.
+        </p>
+      </LegalSection>
+
       <LegalSection title="What hits our servers">
         <p>
-          When you load a playlist, our app may call Playlix API routes that
-          fetch playlist contents from Spotify. Update this section when the
-          Spotify integration is wired up.
+          When you load playlists, Playlix API routes fetch playlist and track
+          metadata from Spotify on your behalf, then return it to your browser.
+          We do not store your playlists or layouts in a Playlix database.
+          Requests are handled for that session and discarded afterward.
         </p>
         <p>
-          We do not store your playlists on a Playlix database. Requests are
-          processed to return data to your browser for that session.
-        </p>
-      </LegalSection>
-
-      <LegalSection title="Accounts and sign-in">
-        <p>
-          Optional sign-in is not live yet. When it is added, this section will
-          describe what Spotify account data we request and how it is used.
+          Server logs from our host (e.g. Vercel) may include standard web
+          data such as IP address, request timing, and errors while operating
+          the service.
         </p>
       </LegalSection>
 
-      <LegalSection title="Hosting and analytics">
+      <LegalSection title="Hosting, analytics, and performance">
         <p>
-          The site may be hosted on Vercel. Vercel may process standard web
-          logs (IP address, request timing, errors) as part of running the
-          service.
+          Playlix is hosted on{" "}
+          <a
+            className="legal-page-link"
+            href="https://vercel.com/legal/privacy-policy"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Vercel
+          </a>
+          . Vercel may process standard web logs (IP address, request timing,
+          errors) while running the service.
         </p>
         <p>
-          We do not run ad trackers. Add analytics details here if you enable
-          them later.
+          We use{" "}
+          <strong className="text-white/90">Vercel Web Analytics</strong> to
+          see aggregate traffic — for example page views and referrers. It does
+          not use third-party ad cookies and does not track you across other
+          websites.
+        </p>
+        <p>
+          We use{" "}
+          <strong className="text-white/90">Vercel Speed Insights</strong> to
+          measure real-world performance (Core Web Vitals such as load time and
+          layout stability). That helps us spot slow pages and fix them.
+        </p>
+        <p>
+          Analytics and performance data are collected by Vercel on our behalf.
+          We do not run ad trackers or sell visitor data.
         </p>
       </LegalSection>
 

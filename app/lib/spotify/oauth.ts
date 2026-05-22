@@ -24,7 +24,15 @@ export type SpotifyTokenBundle = {
   refreshToken?: string;
 };
 
-export function buildSpotifyAuthorizeUrl(state: string) {
+type SpotifyAuthorizeOptions = {
+  /** Ask Spotify to show the approve screen again. */
+  showDialog?: boolean;
+};
+
+export function buildSpotifyAuthorizeUrl(
+  state: string,
+  options: SpotifyAuthorizeOptions = {},
+) {
   const config = getSpotifyConfig();
 
   if (!config) {
@@ -39,6 +47,10 @@ export function buildSpotifyAuthorizeUrl(state: string) {
     scope: spotifyAuthScopes.join(" "),
     state,
   });
+
+  if (options.showDialog) {
+    params.set("show_dialog", "true");
+  }
 
   return `${spotifyAuthorizeUrl}?${params.toString()}`;
 }

@@ -47,18 +47,26 @@ function readAuthSuccessFromUrl() {
   return true;
 }
 
-function getSignInUrl() {
+function getAppAuthPath(pathname: string) {
   const currentUrl = new URL(window.location.href);
 
   if (currentUrl.hostname === "localhost") {
     currentUrl.hostname = "127.0.0.1";
   }
 
-  currentUrl.pathname = "/api/auth/spotify";
+  currentUrl.pathname = pathname;
   currentUrl.search = "";
   currentUrl.hash = "";
 
   return currentUrl.toString();
+}
+
+function getSignInUrl() {
+  return getAppAuthPath("/api/auth/spotify");
+}
+
+function getSwitchAccountUrl() {
+  return getAppAuthPath("/api/auth/switch");
 }
 
 async function fetchSpotifySession() {
@@ -76,9 +84,12 @@ async function fetchSpotifySession() {
 export function useSpotifyAuth() {
   const [status, setStatus] = useState<SpotifyAuthStatus>("loading");
   const [user, setUser] = useState<SpotifyUserProfile | null>(null);
+  const [isDemoMode, setIsDemoMode] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const applySession = useCallback((session: SpotifySessionResponse) => {
+    setIsDemoMode(session.isDemoMode);
+
     if (session.authenticated) {
       setStatus("authenticated");
       setUser(session.user);
@@ -87,6 +98,12 @@ export function useSpotifyAuth() {
 
     setStatus("unauthenticated");
     setUser(null);
+
+    if (session.isDemoMode) {
+      setErrorMessage(
+        "Demo account is unavailable. Check SPOTIFY_DEMO_REFRESH_TOKEN in your environment.",
+      );
+    }
   }, []);
 
   const refreshSession = useCallback(async () => {
@@ -107,6 +124,7 @@ export function useSpotifyAuth() {
       .catch(() => {
         setStatus("unauthenticated");
         setUser(null);
+        setIsDemoMode(false);
 
         if (!authError) {
           setErrorMessage("Could not verify your Spotify session.");
@@ -120,11 +138,19 @@ export function useSpotifyAuth() {
   }, [refreshSession]);
 
   const signIn = useCallback(() => {
+    if (isDemoMode) {
+      return;
+    }
+
     setErrorMessage(null);
     window.location.assign(getSignInUrl());
-  }, []);
+  }, [isDemoMode]);
 
   const signOut = useCallback(async () => {
+    if (isDemoMode) {
+      return;
+    }
+
     setErrorMessage(null);
 
     const response = await fetch("/api/auth/logout", {
@@ -138,15 +164,26 @@ export function useSpotifyAuth() {
 
     setStatus("unauthenticated");
     setUser(null);
-  }, []);
+  }, [isDemoMode]);
+
+  const switchAccount = useCallback(() => {
+    if (isDemoMode) {
+      return;
+    }
+
+    setErrorMessage(null);
+    window.location.assign(getSwitchAccountUrl());
+  }, [isDemoMode]);
 
   return {
     errorMessage,
     isAuthenticated: status === "authenticated",
+    isDemoMode,
     isLoading: status === "loading",
     refreshSession,
     signIn,
     signOut,
+    switchAccount,
     status,
     user,
   };

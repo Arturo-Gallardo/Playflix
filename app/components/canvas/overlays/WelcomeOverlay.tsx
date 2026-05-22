@@ -1,6 +1,7 @@
 "use client";
 
 import { LayoutGrid, Library, Loader2, Palette, Upload, type LucideIcon } from "lucide-react";
+import { PlaylixLogo } from "../../shared/PlaylixLogo";
 import { LegalPageLinks } from "../../shared/LegalPageLinks";
 import { useEffect, useId, useState } from "react";
 import { createPortal } from "react-dom";
@@ -83,8 +84,8 @@ export function WelcomeOverlay({
           role="dialog"
         >
           <header className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="toolbar-logo font-logo shrink-0">SP</div>
+            <div className="flex items-center gap-2">
+              <PlaylixLogo size="md" />
               <div className="min-w-0">
                 <p className="text-[11px] text-[#1DB954]">
                   {isAuthenticated ? "You're connected" : "Sign in required"}

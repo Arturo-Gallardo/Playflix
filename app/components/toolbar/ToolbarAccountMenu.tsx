@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, User } from "lucide-react";
+import { ArrowLeftRight, LogOut, User } from "lucide-react";
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { SpotifyUserProfile } from "../../types/spotify-auth";
@@ -12,11 +12,18 @@ type MenuPosition = {
 };
 
 type ToolbarAccountMenuProps = {
+  isDemoMode: boolean;
   onSignOut: () => void;
+  onSwitchAccount: () => void;
   user: SpotifyUserProfile;
 };
 
-export function ToolbarAccountMenu({ onSignOut, user }: ToolbarAccountMenuProps) {
+export function ToolbarAccountMenu({
+  isDemoMode,
+  onSignOut,
+  onSwitchAccount,
+  user,
+}: ToolbarAccountMenuProps) {
   const menuId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -105,6 +112,11 @@ export function ToolbarAccountMenu({ onSignOut, user }: ToolbarAccountMenuProps)
     };
   }, [isOpen]);
 
+  function handleSwitchAccount() {
+    setIsOpen(false);
+    onSwitchAccount();
+  }
+
   function handleSignOut() {
     setIsOpen(false);
     onSignOut();
@@ -170,14 +182,34 @@ export function ToolbarAccountMenu({ onSignOut, user }: ToolbarAccountMenuProps)
                   <p className="truncate text-sm font-semibold text-white">
                     {user.displayName}
                   </p>
-                  <p className="text-[10px] text-white/45">Spotify account</p>
+                  <p className="text-[10px] text-white/45">
+                    {isDemoMode ? "Demo account" : "Spotify account"}
+                  </p>
                 </div>
               </div>
 
               <button
                 className="toolbar-account-menu-item"
+                disabled={isDemoMode}
+                onClick={handleSwitchAccount}
+                role="menuitem"
+                title={isDemoMode ? "Disabled in demo mode" : undefined}
+                type="button"
+              >
+                <ArrowLeftRight
+                  aria-hidden="true"
+                  className="size-3.5"
+                  strokeWidth={2}
+                />
+                <span>Switch account</span>
+              </button>
+
+              <button
+                className="toolbar-account-menu-item"
+                disabled={isDemoMode}
                 onClick={handleSignOut}
                 role="menuitem"
+                title={isDemoMode ? "Disabled in demo mode" : undefined}
                 type="button"
               >
                 <LogOut aria-hidden="true" className="size-3.5" strokeWidth={2} />
