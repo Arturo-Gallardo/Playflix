@@ -25,7 +25,7 @@ const welcomeTips = [
     icon: LayoutGrid,
   },
   {
-    description: "Sort selections by color, artist, or title",
+    description: "Sort selections by artist, color, tempo, and more",
     icon: Palette,
   },
   {

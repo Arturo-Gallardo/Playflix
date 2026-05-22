@@ -7,7 +7,9 @@ import { useCanvasTiles } from "./useCanvasTiles";
 import { useCanvasTileEnter } from "./useCanvasTileEnter";
 import { usePlaylistCovers } from "../playlist/usePlaylistCovers";
 import { playlistSourcesInclude } from "../../lib/playlist/playlist-source";
+import { enrichCoverForDisplay } from "../../lib/playlist/playlist-cover";
 import type { SpotifyPlaylistSelection } from "../../types/spotify-playlist";
+import type { PlaylistCover } from "../../types/playlist";
 import { clearAllPlaylistCoverCache } from "../../lib/playlist/playlist-cache";
 import { clearCanvasSnapshot } from "../../lib/canvas/canvas-storage";
 import {
@@ -32,7 +34,11 @@ import {
   getTileOrderCriterionLabel,
   sortTilesByArtist,
   sortTilesByColor,
-  sortTilesByDate,
+  sortTilesByDateAdded,
+  sortTilesByDateReleased,
+  sortTilesByDuration,
+  sortTilesByPopularity,
+  sortTilesByTempo,
   type TileOrderCriterion,
 } from "../../lib/canvas/tile-ordering";
 import { getGridCanvasBounds } from "../../lib/canvas/canvas-layout";
@@ -43,6 +49,7 @@ export function useAppCanvas() {
   const [playlistSources, setPlaylistSources] = useState<string[]>([]);
   const playlistSourcesRef = useRef(playlistSources);
   playlistSourcesRef.current = playlistSources;
+  const loadedPlaylistNamesRef = useRef(new Map<string, string>());
 
   const syncPlaylistSources = useCallback(
     (next: string[] | ((previous: string[]) => string[])) => {
@@ -285,6 +292,8 @@ export function useAppCanvas() {
 
       if (criterion === "color") {
         showNotification("ordering by color…");
+      } else if (criterion === "tempo") {
+        showNotification("ordering by tempo…");
       }
 
       let sortedTiles = selectedTiles;
@@ -294,8 +303,16 @@ export function useAppCanvas() {
           sortedTiles = await sortTilesByColor(selectedTiles);
         } else if (criterion === "artist") {
           sortedTiles = sortTilesByArtist(selectedTiles);
+        } else if (criterion === "dateAdded") {
+          sortedTiles = sortTilesByDateAdded(selectedTiles);
+        } else if (criterion === "dateReleased") {
+          sortedTiles = sortTilesByDateReleased(selectedTiles);
+        } else if (criterion === "duration") {
+          sortedTiles = sortTilesByDuration(selectedTiles);
+        } else if (criterion === "tempo") {
+          sortedTiles = await sortTilesByTempo(selectedTiles);
         } else {
-          sortedTiles = sortTilesByDate(selectedTiles);
+          sortedTiles = sortTilesByPopularity(selectedTiles);
         }
       } catch {
         showNotification("could not order selected tiles");
@@ -578,6 +595,8 @@ export function useAppCanvas() {
       return;
     }
 
+    loadedPlaylistNamesRef.current.set(playlist.url, playlist.name);
+
     discardClearHistory();
     beginTileDragCheckpoint();
 
@@ -586,7 +605,12 @@ export function useAppCanvas() {
 
     const totalTracks = await loadPlaylistProgressively(playlist.id, {
       onBatch: (covers) => {
-        playlistBounds = appendPlaylistTiles(covers, batchId, {
+        const playlistCovers = covers.map((cover) => ({
+          ...cover,
+          playlistName: playlist.name,
+        }));
+
+        playlistBounds = appendPlaylistTiles(playlistCovers, batchId, {
           continueGrid: true,
           expectedTotal: playlist.trackCount,
         });
@@ -618,6 +642,14 @@ export function useAppCanvas() {
 
     showNotification(`${totalTracks} ${coverLabel} added`);
   }
+
+  const resolveCoverForDisplay = useCallback((cover: PlaylistCover) => {
+    return enrichCoverForDisplay(
+      cover,
+      loadedPlaylistNamesRef.current,
+      playlistSourcesRef.current,
+    );
+  }, []);
 
   return {
     areCoverDetailsHidden,
@@ -655,6 +687,7 @@ export function useAppCanvas() {
     menuCanPaste,
     playlistStatus,
     pointer,
+    resolveCoverForDisplay,
     saveCanvasNow,
     setAreCoverDetailsHidden,
     setIsShortcutLegendVisible,

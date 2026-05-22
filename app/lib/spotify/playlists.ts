@@ -1,9 +1,12 @@
 import type { PlaylistCoverWire } from "../../types/playlist";
 import type { SpotifyPlaylistSummary } from "../../types/spotify-playlist";
+import { enrichCoversWithTrackMetadata } from "./track-metadata";
 import { spotifyApiFetch, spotifyApiFetchUrl } from "./spotify-api";
 
 const playlistListFields =
   "items(id,name,images,items(total),tracks(total),external_urls,owner(id),collaborative),total,next,limit,offset";
+const playlistItemFields =
+  "items(added_at,item(type,id,name,artists(name),album(name,release_date,images(url)),duration_ms,popularity,external_urls(spotify))),limit,offset,total,next";
 const playlistPageLimit = 50;
 const playlistTrackPageLimit = 50;
 
@@ -27,6 +30,7 @@ type SpotifyPlaylistListPage = {
 };
 
 type SpotifyTrackItem = {
+  added_at?: string;
   item?: SpotifyTrack | null;
   track?: SpotifyTrack | null;
 };
@@ -34,11 +38,15 @@ type SpotifyTrackItem = {
 type SpotifyTrack = {
   album?: {
     images?: Array<{ url: string }>;
+    name?: string;
+    release_date?: string;
   };
   artists?: Array<{ name: string }>;
+  duration_ms?: number;
   external_urls?: { spotify?: string };
   id?: string;
   name?: string;
+  popularity?: number;
   type?: string;
 };
 
@@ -110,7 +118,7 @@ export async function fetchPlaylistCoverWirePage(
 ) {
   const path =
     cursorPath ??
-    `/playlists/${playlistId}/items?limit=${playlistTrackPageLimit}&additional_types=track`;
+    `/playlists/${playlistId}/items?limit=${playlistTrackPageLimit}&additional_types=track&fields=${encodeURIComponent(playlistItemFields)}`;
 
   const pageResult = path.startsWith("http")
     ? await spotifyApiFetchUrl(accessToken, path)
@@ -124,12 +132,17 @@ export async function fetchPlaylistCoverWirePage(
   const covers: PlaylistCoverWire[] = [];
 
   for (const item of page.items ?? []) {
-    const cover = mapTrackToCoverWire(item?.item ?? item?.track ?? null);
+    const cover = mapPlaylistItemToCoverWire(item);
 
     if (cover) {
       covers.push(cover);
     }
   }
+
+  const enrichedCovers = await enrichCoversWithTrackMetadata(
+    accessToken,
+    covers,
+  );
 
   const pageOffset = page.offset ?? parsePlaylistItemsOffset(path) ?? 0;
   const pageLimit = page.limit ?? playlistTrackPageLimit;
@@ -152,7 +165,7 @@ export async function fetchPlaylistCoverWirePage(
 
   return {
     ok: true as const,
-    covers,
+    covers: enrichedCovers,
     hasMore: Boolean(nextPath),
     nextPath,
   };
@@ -163,7 +176,7 @@ function buildPlaylistItemsPath(
   offset: number,
   limit: number,
 ) {
-  return `/playlists/${playlistId}/items?offset=${offset}&limit=${limit}&additional_types=track`;
+  return `/playlists/${playlistId}/items?offset=${offset}&limit=${limit}&additional_types=track&fields=${encodeURIComponent(playlistItemFields)}`;
 }
 
 function parsePlaylistItemsOffset(path: string) {
@@ -223,6 +236,32 @@ function mapPlaylistItemToSummary(
   };
 }
 
+function mapPlaylistItemToCoverWire(
+  row: SpotifyTrackItem | null,
+): PlaylistCoverWire | null {
+  if (!row) {
+    return null;
+  }
+
+  const track = row.item ?? row.track ?? null;
+  const cover = mapTrackToCoverWire(track);
+
+  if (!cover) {
+    return null;
+  }
+
+  return {
+    ...cover,
+    addedAt: row.added_at ?? null,
+    releaseDate: track?.album?.release_date ?? null,
+    durationMs:
+      typeof track?.duration_ms === "number" ? track.duration_ms : null,
+    popularity:
+      typeof track?.popularity === "number" ? track.popularity : null,
+    tempo: null,
+  };
+}
+
 function mapTrackToCoverWire(track: SpotifyTrack | null): PlaylistCoverWire | null {
   if (!track?.id || !track.name) {
     return null;
@@ -242,5 +281,12 @@ function mapTrackToCoverWire(track: SpotifyTrack | null): PlaylistCoverWire | nu
     url: track.external_urls?.spotify ?? buildSpotifyTrackUrl(track.id),
     artist: artistNames.length > 0 ? artistNames.join(", ") : null,
     albumArtUrl: track.album?.images?.[0]?.url ?? null,
+    albumName: track.album?.name?.trim() || null,
+    playlistName: null,
+    addedAt: null,
+    releaseDate: null,
+    durationMs: null,
+    popularity: null,
+    tempo: null,
   };
 }

@@ -172,7 +172,12 @@ function AppCanvasStage({
       />
 
       {hoveredCoverDetails && !canvas.areCoverDetailsHidden ? (
-        <CanvasCoverDetailsPanel details={hoveredCoverDetails} />
+        <CanvasCoverDetailsPanel
+          details={{
+            ...hoveredCoverDetails,
+            cover: canvas.resolveCoverForDisplay(hoveredCoverDetails.cover),
+          }}
+        />
       ) : null}
 
       {canvas.isShortcutLegendVisible ? (

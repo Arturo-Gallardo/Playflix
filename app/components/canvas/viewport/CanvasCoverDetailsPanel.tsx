@@ -7,37 +7,61 @@ type CanvasCoverDetailsPanelProps = {
   details: HoveredCoverDetails;
 };
 
-export function CanvasCoverDetailsPanel({ details }: CanvasCoverDetailsPanelProps) {
+function CoverDetailRow({ label, value }: { label: string; value: string }) {
+  return (
+    <p className="canvas-cover-details-row">
+      <span className="canvas-cover-details-label">{label}:</span>{" "}
+      <span className="canvas-cover-details-value">{value}</span>
+    </p>
+  );
+}
+
+export function CanvasCoverDetailsPanel({
+  details,
+}: CanvasCoverDetailsPanelProps) {
   const displayDetails = getCoverDisplayDetails(details.cover);
+  const trackNumber = String(details.index + 1).padStart(2, "0");
 
   return (
-    <aside className="pointer-events-none fixed bottom-5 left-5 z-20 flex max-w-2xl gap-4 rounded-md border border-white/15 bg-[#111111]/45 p-3 shadow-2xl backdrop-blur-sm">
-      <span className="font-control absolute right-3 top-3 rounded-full border border-white/15 bg-white/10 px-2 py-1 text-[10px] font-semibold text-white/60">
-        {String(details.index + 1).padStart(2, "0")}
-      </span>
-
+    <aside className="canvas-cover-details-panel pointer-events-none fixed bottom-5 left-5 z-20 flex items-stretch overflow-hidden rounded-md border border-white/15 bg-[#111111]/65 shadow-2xl backdrop-blur-md">
       {details.cover.albumArtUrl ? (
-        <div className="relative aspect-square w-28 shrink-0 overflow-hidden rounded bg-white/5">
+        <div className="canvas-cover-details-art relative overflow-hidden rounded bg-white/5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             alt=""
-            className="size-full object-cover"
-            height={112}
+            className="block size-full object-cover"
             src={details.cover.albumArtUrl}
-            width={112}
           />
         </div>
       ) : null}
 
-      <div className="min-w-0 self-center pr-10">
-        {displayDetails.artist ? (
-          <p className="font-control mb-2 text-[10px] uppercase tracking-[0.24em] text-white/55">
-            {displayDetails.artist}
-          </p>
+      <div className="canvas-cover-details-copy">
+        <div className="canvas-cover-details-header">
+          {displayDetails.artist ? (
+            <p className="canvas-cover-details-artist">{displayDetails.artist}</p>
+          ) : (
+            <span />
+          )}
+          <span className="canvas-cover-details-index">{trackNumber}</span>
+        </div>
+
+        <p className="canvas-cover-details-title">{displayDetails.title}</p>
+
+        {displayDetails.metaRows.length > 0 ? (
+          <div className="canvas-cover-details-meta-block">
+            {displayDetails.metaRows.map((row) => (
+              <CoverDetailRow key={row.label} label={row.label} value={row.value} />
+            ))}
+          </div>
         ) : null}
-        <p className="font-control text-sm font-semibold leading-5 text-white drop-shadow">
-          {displayDetails.title}
-        </p>
+
+        {displayDetails.dateRows.length > 0 ? (
+          <div className="canvas-cover-details-dates">
+            {displayDetails.dateRows.map((row) => (
+              <CoverDetailRow key={row.label} label={row.label} value={row.value} />
+            ))}
+          </div>
+        ) : null}
       </div>
     </aside>
   );

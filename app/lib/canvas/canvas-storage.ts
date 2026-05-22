@@ -174,7 +174,14 @@ function isCanvasCoverWire(value: unknown): value is CanvasCoverWire {
     typeof value.title === "string" &&
     typeof value.url === "string" &&
     isNullableString(value.artist) &&
-    isNullableString(value.albumArtUrl)
+    isNullableString(value.albumArtUrl) &&
+    isOptionalNullableString(value.albumName) &&
+    isOptionalNullableString(value.playlistName) &&
+    isOptionalNullableString(value.addedAt) &&
+    isOptionalNullableString(value.releaseDate) &&
+    isOptionalNullableNumber(value.durationMs) &&
+    isOptionalNullableNumber(value.popularity) &&
+    isOptionalNullableNumber(value.tempo)
   );
 }
 
@@ -185,8 +192,23 @@ function isPlaylistCoverWire(value: unknown): value is PlaylistCoverWire {
     typeof value.title === "string" &&
     typeof value.url === "string" &&
     isNullableString(value.artist) &&
-    isNullableString(value.albumArtUrl)
+    isNullableString(value.albumArtUrl) &&
+    isOptionalNullableString(value.albumName) &&
+    isOptionalNullableString(value.playlistName) &&
+    isOptionalNullableString(value.addedAt) &&
+    isOptionalNullableString(value.releaseDate) &&
+    isOptionalNullableNumber(value.durationMs) &&
+    isOptionalNullableNumber(value.popularity) &&
+    isOptionalNullableNumber(value.tempo)
   );
+}
+
+function isOptionalNullableString(value: unknown) {
+  return value === undefined || value === null || typeof value === "string";
+}
+
+function isOptionalNullableNumber(value: unknown) {
+  return value === undefined || value === null || typeof value === "number";
 }
 
 function isNullableString(value: unknown) {

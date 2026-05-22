@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { TileOrderCriterion } from "../../lib/canvas/tile-ordering";
 import { cn } from "../../lib/cn";
+import { OrderByDropdown } from "./OrderByDropdown";
 
 type CanvasContextMenuProps = {
   canCopy: boolean;
@@ -26,12 +27,6 @@ type MenuPosition = {
 
 const menuItemClassName =
   "font-control flex w-full cursor-default items-center justify-between gap-3 rounded-md border-0 bg-transparent px-2.5 py-2 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-white/90 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:text-white/30 disabled:hover:bg-transparent";
-
-const orderMenuItems: Array<{ criterion: TileOrderCriterion; label: string }> = [
-  { criterion: "color", label: "Color" },
-  { criterion: "artist", label: "Artist" },
-  { criterion: "date", label: "Title" },
-];
 
 export function CanvasContextMenu({
   canCopy,
@@ -185,24 +180,12 @@ export function CanvasContextMenu({
         role="separator"
       />
 
-      <p className="px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-white/40">
-        Order by
-      </p>
-      {orderMenuItems.map((item) => (
-        <button
-          key={item.criterion}
-          className={cn(menuItemClassName, !canOrder && "text-white/30")}
-          disabled={!canOrder}
-          onClick={() => {
-            onOrderBy(item.criterion);
-            onClose();
-          }}
-          role="menuitem"
-          type="button"
-        >
-          <span>{item.label}</span>
-        </button>
-      ))}
+      <OrderByDropdown
+        canOrder={canOrder}
+        itemClassName={menuItemClassName}
+        onClose={onClose}
+        onOrderBy={onOrderBy}
+      />
     </div>,
     document.body,
   );
